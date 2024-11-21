@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Accepts incoming TCP connections on port 8585.
  */
 public class Server {
-    private HashMap<Integer, ClientHandler> nodes;
+    private HashMap<String, ClientHandler> nodes;
     private ArrayList<ClientHandler> controlpanels;
     private ServerSocket serverSocket;
     private boolean isRunning;
@@ -86,7 +86,7 @@ public class Server {
      * @param id ID of the node.
      * @param nodeClientHandler ClientHandler for the node.
      */
-    public void addNewNode(Integer id, ClientHandler nodeClientHandler) {
+    public void addNewNode(String id, ClientHandler nodeClientHandler) {
         this.nodes.put(id, nodeClientHandler);
     }
 
@@ -102,7 +102,7 @@ public class Server {
      * Remove a ClientHandler for a node from the map of nodes.
      * @param id ID of the node.
      */
-    public void removeNode(Integer id) {
+    public void removeNode(String id) {
         this.nodes.remove(id);
     }
 
@@ -119,8 +119,8 @@ public class Server {
      * @param id ID of the receiver node.
      * @param message A serialized Message.
      */
-    public void sendMessageToNode(Integer id, String message) {
-        this.nodes.get(id).sendMessage(message);
+    public void sendMessageToNode(String id, String message) {
+        this.nodes.get(id).sendMessageToClient(message);
     }
 
     /**
@@ -129,7 +129,7 @@ public class Server {
      */
     public void sendMessageToAllControlPanels(String message) {
         for (ClientHandler c : controlpanels) {
-            c.sendMessage(message);
+            c.sendMessageToClient(message);
         }
     }
 
