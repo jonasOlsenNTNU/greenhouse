@@ -25,6 +25,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private final List<SensorListener> sensorListeners = new LinkedList<>();
   private final List<ActuatorListener> actuatorListeners = new LinkedList<>();
   private final List<NodeStateListener> stateListeners = new LinkedList<>();
+  private final NodeCommunicationChannel communicationChannel = new NodeCommunicationChannel(this);
 
   Timer sensorReadingTimer;
 
@@ -130,6 +131,22 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       running = true;
       notifyStateChanges(true);
     }
+  }
+
+  /**
+   * Initiate communication with the server.
+   */
+  public void startCommunication() {
+    this.communicationChannel.sendConnectionMessage(true);
+    this.communicationChannel.open();
+  }
+
+  /**
+   * Stop communication with the server.
+   */
+  public void stopCommunication() {
+    this.communicationChannel.sendConnectionMessage(false);
+    this.communicationChannel.closeConnection();
   }
 
   /**
