@@ -6,6 +6,7 @@ public class NodeCommunicationChannel extends Client {
     private SensorActuatorNode node;
     public NodeCommunicationChannel(SensorActuatorNode node) {
         this.node = node;
+        this.setMessageHandler(new NodeMessageHandler(this.node));
     }
 
 }
