@@ -1,6 +1,7 @@
-package no.ntnu.message.server;
+package no.ntnu.message.greenhouse;
 
-import no.ntnu.message.common.Message;
+import no.ntnu.message.Message;
+import no.ntnu.message.Splitters;
 
 /**
  * A message readable by the server.
@@ -17,14 +18,16 @@ public class NodeConnectionMessage implements Message {
      * @param nodeID ID of the node
      * @param connecting True if the node is connecting, false if disconnecting
      */
-    //TODO: splitters should be managed by an enum file according to the protocol
     public NodeConnectionMessage(int nodeID, boolean connecting) {
         this.head = "server";
-        this.body = "node"+ "," + connecting + "," + nodeID;
+        this.body = "NodeConnectionMessage"
+                + Splitters.TYPE_SPLITTER + "node"
+                + Splitters.BODY_SPLITTER + connecting
+                + Splitters.BODY_SPLITTER + nodeID;
     }
 
     @Override
     public String getMessageString() {
-        return this.head + "#" + this.body;
+        return this.head + Splitters.MESSAGE_SPLITTER + this.body;
     }
 }

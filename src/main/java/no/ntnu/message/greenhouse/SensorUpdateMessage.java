@@ -1,17 +1,15 @@
 package no.ntnu.message.greenhouse;
 
 import no.ntnu.greenhouse.SensorReading;
-import no.ntnu.message.common.Message;
+import no.ntnu.message.Message;
+import no.ntnu.message.Splitters;
 
 import java.util.List;
 
 /**
- * A message readable by a GreenhouseEventListener
- * Specifically by the onSensorData method.
+ * A message for triggering the GreenhouseEventListener.onSensorData event.
  */
-//TODO: splitters should be managed by an enum file according to the protocol
 public class SensorUpdateMessage implements Message {
-
     private final String head;
     private final String body;
 
@@ -24,14 +22,19 @@ public class SensorUpdateMessage implements Message {
         this.head = "controlpanel";
         StringBuilder readings = new StringBuilder();
         for (SensorReading reading : sensors) {
-            readings.append(reading.toString()).append(",");
+            readings.append(reading.getType()).append(Splitters.VALUES_SPLITTER);
+            readings.append(reading.getValue()).append(Splitters.VALUES_SPLITTER);
+            readings.append(reading.getUnit()).append(Splitters.VALUES_SPLITTER);
+            readings.append(Splitters.LIST_SPLITTER);
         }
         readings.deleteCharAt(readings.length());
-        this.body = nodeId + readings.toString();
+        this.body = "SensorUpdateMessage"
+                + Splitters.TYPE_SPLITTER + nodeId
+                + Splitters.BODY_SPLITTER + readings.toString();
     }
 
     @Override
     public String getMessageString() {
-        return this.head + "#" + this.body;
+        return this.head + Splitters.MESSAGE_SPLITTER + this.body;
     }
 }

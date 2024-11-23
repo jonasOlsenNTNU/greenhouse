@@ -1,7 +1,8 @@
-package no.ntnu.message.common;
+package no.ntnu.message;
 
 /**
  * Message that can be transmitted over a socket connection.
+ * See protocol.md for formatting details.
  */
 public interface Message {
 

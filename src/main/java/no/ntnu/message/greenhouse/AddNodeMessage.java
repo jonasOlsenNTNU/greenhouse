@@ -2,17 +2,14 @@ package no.ntnu.message.greenhouse;
 
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
-import no.ntnu.message.common.Message;
-
-import java.util.Iterator;
+import no.ntnu.message.Message;
+import no.ntnu.message.Splitters;
 
 /**
- * A message readable by a GreenhouseEventListener.
+ * A message for triggering the GreenhouseEventListener.onNodeAdded event
  * Contains information about a new node.
  * Used to add a node to a controlpanel.
  */
-
-//TODO: splitters should be managed by an enum file according to the protocol
 public class AddNodeMessage implements Message {
     private final String head;
     private final String body;
@@ -26,10 +23,14 @@ public class AddNodeMessage implements Message {
         this.head = "controlpanel";
         StringBuilder actuatorsString = new StringBuilder();
         for (Actuator actuator : actuators) {
-            actuatorsString.append(actuator.toString()).append(",");
+            actuatorsString.append(actuator.getId()).append(Splitters.VALUES_SPLITTER);
+            actuatorsString.append(actuator.getType()).append(Splitters.VALUES_SPLITTER);
+            actuatorsString.append(actuator.isOn()).append(Splitters.VALUES_SPLITTER);
         }
         actuatorsString.deleteCharAt(actuatorsString.length());
-        this.body = nodeID + "," + actuatorsString;
+        this.body = "AddNodeMessage"
+                + Splitters.TYPE_SPLITTER + nodeID
+                + Splitters.BODY_SPLITTER + actuatorsString;
     }
 
     @Override
