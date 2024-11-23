@@ -72,7 +72,11 @@ public class ClientHandler extends Thread {
         while (this.clientConnected) {
             String clientMessage = readClientMessage();
             if (clientMessage != null) {
-                routeReceivedMessage(clientMessage);
+                if(server.messageHandler.isServerMessage(clientMessage)){
+                    server.messageHandler.handleServerMessage(clientMessage, this);
+                } else {
+                    this.server.messageHandler.handleMessage(clientMessage);
+                }
             }
         }
         //TODO: Remove client from server (disconnected)
@@ -102,44 +106,5 @@ public class ClientHandler extends Thread {
         socketWriter.println(message);
     }
 
-    /**
-     * Route the serialized message to the correct receiver.
-     * @param message A serialized message received from the client socket.
-     */
-    private void routeReceivedMessage(String message) {
-        //TODO: Finish implementation later (might require a MessageParser.class + Message.class)
-        // Deserializing should be done by a Parser
-        // splitters should be managed by an enum file and used by the parser
-        String messagesplitter = ",";
-        String headsplitter = "#";
-        String headString = message.split(messagesplitter)[1];
-        String[] head = headString.split(headsplitter);
 
-        // TODO: Get receiver from Parser instead
-        String receiver = head[1];
-        switch(receiver) {
-            case "server": {
-                //Do something. Possible cases:
-                //Add the ClientHandler to a map/list
-                //Remove the ClientHandler from a map/list
-                //Disconnect?
-                break;
-            }
-            case "node": {
-                // TODO: Get ID from Parser instead
-                String nodeID = head[2];
-                server.sendMessageToNode(nodeID, message);
-                break;
-            }
-            case "controlpanel": {
-                server.sendMessageToAllControlPanels(message);
-                break;
-            }
-            default: {
-                Logger.error("Message from client not valid.");
-                break;
-            }
-        }
-
-    }
 }

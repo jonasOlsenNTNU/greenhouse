@@ -18,6 +18,7 @@ public class Server {
     private ServerSocket serverSocket;
     private boolean isRunning;
     private static final int portNumber = 8585;
+    protected final ServerMessageHandler messageHandler = new ServerMessageHandler(this);
 
     /**
      * Normal constructor for a server object.
