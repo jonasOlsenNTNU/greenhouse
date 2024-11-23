@@ -4,6 +4,7 @@ package no.ntnu.controlpanel;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.message.Splitters;
+import no.ntnu.server.MessageHandler;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.Parser;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Class responsible for parsing and handling incoming serialized messages.
  */
-public class ControlPanelMessageHandler {
+public class ControlPanelMessageHandler implements MessageHandler {
     private final ControlPanelLogic logic;
     public ControlPanelMessageHandler(ControlPanelLogic logic) {
         this.logic = logic;
