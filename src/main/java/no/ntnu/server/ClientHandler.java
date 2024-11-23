@@ -44,6 +44,7 @@ public class ClientHandler extends Thread {
         if (!initializeIOStreams()) {
             return;
         }
+        Logger.info("ClientHandler started on thread: " + Thread.currentThread().getName());
         handleClient();
     }
 
@@ -72,6 +73,8 @@ public class ClientHandler extends Thread {
         while (this.clientConnected) {
             String clientMessage = readClientMessage();
             if (clientMessage != null) {
+                //TODO: Remove logger after testing
+                Logger.info("Client message received: " + clientMessage);
                 if(server.messageHandler.isServerMessage(clientMessage)){
                     server.messageHandler.handleServerMessage(clientMessage, this);
                 } else {

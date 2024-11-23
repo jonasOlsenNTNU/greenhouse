@@ -112,6 +112,9 @@ public abstract class Client {
      * @param message A serialized message. See protocol.md for formatting information.
      */
     public void sendMessageToServer(String message) {
+        message = message.replace("\\", "");
+        //TODO: Remove logger after testing
+        Logger.info("Message sent: " + message);
         this.socketWriter.println(message);
     }
 

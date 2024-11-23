@@ -74,6 +74,7 @@ public class Server {
         ServerSocket listeningSocket = null;
         try {
             listeningSocket = new ServerSocket(port);
+            Logger.info("Server listening on port: " + port);
             this.isRunning = true;
         } catch (IOException e) {
             Logger.error("Could not create ServerSocket" + e.getMessage());

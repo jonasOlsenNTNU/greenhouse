@@ -137,8 +137,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * Initiate communication with the server.
    */
   public void startCommunication() {
-    this.communicationChannel.sendConnectionMessage(true);
     this.communicationChannel.open();
+    this.communicationChannel.sendConnectionMessage(true);
   }
 
   /**

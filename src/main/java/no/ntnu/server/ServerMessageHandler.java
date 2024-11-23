@@ -20,12 +20,15 @@ public class ServerMessageHandler implements MessageHandler {
             //Send to handleServerMessage from the ClientHandler directly.
             case "node" -> server.sendMessageToNode(head[1], message);
             case "controlpanel" -> server.sendMessageToAllControlPanels(message);
-            default -> Logger.error("Message from client not valid.");
+            default -> Logger.error("Message from client not valid: " + head[0]);
         }
     }
 
     public boolean isServerMessage(String message) {
-        return message.split(Splitters.HEAD_SPLITTER)[0].equals("server");
+        String type = message.split(Splitters.MESSAGE_SPLITTER)[0].split(Splitters.HEAD_SPLITTER)[0];
+        // TODO: Remove logger after testing
+        Logger.info("Message type: " + type);
+        return type.equals("server");
     }
 
     public void handleServerMessage(String message, ClientHandler clientHandler) {
@@ -33,6 +36,8 @@ public class ServerMessageHandler implements MessageHandler {
                 .split(Splitters.TYPE_SPLITTER);
         String type = bodySplit[0];
         String[] data = bodySplit[1].split(Splitters.BODY_SPLITTER);
+        //TODO: Remove logger after testing
+        Logger.info(data[0]);
         switch (type) {
             case "NodeConnectionMessage" -> {
                 String nodeID = data[1];
@@ -54,7 +59,7 @@ public class ServerMessageHandler implements MessageHandler {
                     Logger.error("Boolean 'connecting' not valid");
                 }
             }
-            default -> Logger.error("Message type not found.");
+            default -> Logger.error("Message type not found: " + type);
         }
     }
     private void sendRemoveNodeMessage(String nodeID) {
