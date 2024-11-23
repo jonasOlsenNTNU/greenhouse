@@ -1,6 +1,7 @@
 package no.ntnu.controlpanel;
 
 import no.ntnu.message.controlpanel.ActuatorChangeMessage;
+import no.ntnu.message.controlpanel.ControlPanelConnectionMessage;
 import no.ntnu.server.Client;
 import no.ntnu.tools.Logger;
 
@@ -18,6 +19,11 @@ public class ControlPanelCommunicationChannel extends Client implements Communic
         this.setMessageHandler(new ControlPanelMessageHandler(logic));
         this.connected = false;
     }
+
+    public void sendControlPanelConnectionMessage(boolean connecting) {
+        this.sendMessageToServer(new ControlPanelConnectionMessage(connecting).getMessageString());
+    }
+
     @Override
     public void closeConnection() {
         this.connected = false;

@@ -191,4 +191,14 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     Logger.info("open() does nothing for the fake spawner, all the timers are running already...");
     return true;
   }
+
+  @Override
+  public void closeConnection() {
+
+  }
+
+  @Override
+  public void sendControlPanelConnectionMessage(boolean connecting) {
+
+  }
 }

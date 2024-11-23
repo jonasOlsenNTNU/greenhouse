@@ -15,19 +15,21 @@ public abstract class Client {
     protected PrintWriter socketWriter;
     protected Socket socket;
     protected boolean connected;
-    public Client() {
+    protected Client() {
         this.messageHandler = null;
         this.connected = false;
     }
     public boolean open() {
-        if (!connectToServer()) {
-            return false;
+        if(!connected) {
+            if (!connectToServer()) {
+                return false;
+            }
+            if (!initializeIOStreams()) {
+                return false;
+            }
+            Thread receiverThread = new Thread(this::handleConnection);
+            receiverThread.start();
         }
-        if (!initializeIOStreams()) {
-            return false;
-        }
-        Thread receiverThread = new Thread(this::handleConnection);
-        receiverThread.start();
         return true;
     }
 
