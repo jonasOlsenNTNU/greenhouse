@@ -18,34 +18,62 @@ distributed application.
 
 ## The underlying transport protocol
 
-TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you 
+TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you
 choose this transport layer protocol?
+
+Sensors UDP- Sensors are programmed using the UDP protocol for sending data, because of the frequent sending of data UDP would be the
+fast and most natural protocol to implement in this case scenario. If data gets lost its no problem as newer
+and more accurate in real time data is coming soon after. // Kan også implementere TCP connection om control panel,
+f.eks ikke får ny data innenfor en viss tidsperiode.
+
+//TODO Actuators
+
+Communication Node TCP-
+
+Control Panel TCP - Control panel is programmed using the TCP protocol for sending commands. Because of the importance
+of a command being correctly sent and acknowledged by the communication nodes the TCP protocol is perfect to use in
+this case scenario.
+
+
+
+
 
 ## The architecture
 
-TODO - show the general architecture of your network. Which part is a server? Who are clients? 
-Do you have one or several servers? Perhaps include a picture here. 
+TODO - show the general architecture of your network. Which part is a server? Who are clients?
+Do you have one or several servers? Perhaps include a picture here.
+
 
 
 ## The flow of information and events
 
-TODO - describe what each network node does and when. Some periodic events? Some reaction on 
-incoming packets? Perhaps split into several subsections, where each subsection describes one 
+TODO - describe what each network node does and when. Some periodic events? Some reaction on
+incoming packets? Perhaps split into several subsections, where each subsection describes one
 node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes).
+
+Sensor node -  Sense their surroundings every second and send back the information they gather back to the
+Communication node. For example if it´s a sensor node with temperature and humidity sensor the sensors send their
+information back to the Communication node
+
+Actuators Node-
+
+Communication Nodes
+
+Control Panel
 
 ## Connection and state
 
-TODO - is your communication protocol connection-oriented or connection-less? Is it stateful or 
-stateless? 
+TODO - is your communication protocol connection-oriented or connection-less? Is it stateful or
+stateless?
 
 ## Types, constants
 
-TODO - Do you have some specific value types you use in several messages? They you can describe 
+TODO - Do you have some specific value types you use in several messages? They you can describe
 them here.
 
 ## Message format
 
-TODO - describe the general format of all messages. Then describe specific format for each 
+TODO - describe the general format of all messages. Then describe specific format for each
 message type in your protocol.
 
 ### Error messages
@@ -53,21 +81,19 @@ message type in your protocol.
 TODO - describe the possible error messages that nodes can send in your system.
 
 ## An example scenario
-
-TODO - describe a typical scenario. How would it look like from communication perspective? When 
-are connections established? Which packets are sent? How do nodes react on the packets? An 
+TODO - describe a typical scenario. How would it look like from communication perspective? When
+are connections established? Which packets are sent? How do nodes react on the packets? An
 example scenario could be as follows:
-1. A sensor node with ID=1 is started. It has a temperature sensor, two humidity sensors. It can
-   also open a window.
-2. A sensor node with ID=2 is started. It has a single temperature sensor and can control two fans
-   and a heater.
-3. A control panel node is started.
-4. Another control panel node is started.
-5. A sensor node with ID=3 is started. It has a two temperature sensors and no actuators.
-6. After 5 seconds all three sensor/actuator nodes broadcast their sensor data.
-7. The user of the first-control panel presses on the button "ON" for the first fan of
-   sensor/actuator node with ID=2.
-8. The user of the second control-panel node presses on the button "turn off all actuators".
+
+1. Control Panel with name CP1 tells Communication node with the name CNode1 to close Vent1
+2. CNode1 sends the command to Vent1 and waits for the ACK
+3. The vent closes and sends ACK to CNode1
+4. CNode1 sends information about the vent closing to CP1
+5. Sensor with the name of Sens1 sends information to CNode 1
+6. CNode1 sends the information to CP1 and waits for ACK
+7. CNode1 doesnt receive ACK from CP1, sends the information again and waits for ACK
+8. CP1 correctly receives the information from the node and sends back an ACK
+
 
 ## Reliability and security
 

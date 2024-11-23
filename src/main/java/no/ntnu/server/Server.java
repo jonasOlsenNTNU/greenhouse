@@ -16,7 +16,7 @@ public class Server {
     private HashMap<String, ClientHandler> nodes;
     private ArrayList<ClientHandler> controlpanels;
     private ServerSocket serverSocket;
-    private boolean isRunning;
+    public boolean isRunning;
     private static final int portNumber = 8585;
 
     /**
@@ -133,4 +133,7 @@ public class Server {
         }
     }
 
+    public boolean isRunning() {
+        return this.isRunning;
+    }
 }
