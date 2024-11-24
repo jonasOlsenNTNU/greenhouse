@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class Server {
     private HashMap<String, ClientHandler> nodes;
-    private ArrayList<ClientHandler> controlpanels;
+    private HashMap<Integer, ClientHandler> controlpanels;
     private ServerSocket serverSocket;
     private boolean isRunning;
     private static final int portNumber = 8585;
@@ -26,7 +26,7 @@ public class Server {
      */
     public Server() {
         this.nodes = new HashMap<>();
-        this.controlpanels = new ArrayList<>();
+        this.controlpanels = new HashMap<>();
         this.isRunning = false;
     }
 
@@ -36,11 +36,13 @@ public class Server {
      */
     public void start() {
         this.serverSocket = openListeningSocket(portNumber);
+        int clientNumber = 0;
         while(isRunning) {
             Socket clientSocket = acceptNextClientConnection();
             if (clientSocket != null) {
                 Logger.info("Client connected from " + clientSocket.getRemoteSocketAddress());
-                ClientHandler clientHandler = new ClientHandler(clientSocket, this);
+                ClientHandler clientHandler = new ClientHandler(clientSocket, this, clientNumber);
+                clientNumber++;
                 clientHandler.start();
             }
         }
@@ -97,7 +99,7 @@ public class Server {
      * @param cPanelClientHandler ClientHandler for the control panel.
      */
     public void addNewControlPanel(ClientHandler cPanelClientHandler) {
-        this.controlpanels.add(cPanelClientHandler);
+        this.controlpanels.put(cPanelClientHandler.getClientNumber(), cPanelClientHandler);
     }
 
     /**
@@ -113,7 +115,7 @@ public class Server {
      * @param cPanelClientHandler ClientHandler for the control panel.
      */
     public void removeControlPanel(ClientHandler cPanelClientHandler) {
-        this.controlpanels.remove(cPanelClientHandler);
+        this.controlpanels.remove(cPanelClientHandler.getClientNumber());
     }
 
     /**
@@ -125,12 +127,22 @@ public class Server {
         this.nodes.get(id).sendMessageToClient(message);
     }
 
+    public void sendMessageToAllNodes(String message) {
+        for (ClientHandler c : nodes.values()) {
+            c.sendMessageToClient(message);
+        }
+    }
+
+    public void sendMessageToControlPanel(int clientHandlerID, String message) {
+        this.controlpanels.get(clientHandlerID).sendMessageToClient(message);
+    }
+
     /**
      * Send a message to all control panels.
      * @param message A serialized Message.
      */
     public void sendMessageToAllControlPanels(String message) {
-        for (ClientHandler c : controlpanels) {
+        for (ClientHandler c : controlpanels.values()) {
             c.sendMessageToClient(message);
         }
     }

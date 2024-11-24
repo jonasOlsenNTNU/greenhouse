@@ -73,6 +73,8 @@ public abstract class Client {
         while(this.connected) {
             String serverMessage = readServerMessage();
             if (serverMessage != null) {
+                //TODO: Remove Logger after testing
+                Logger.info("Received message from server: " + serverMessage);
                 this.messageHandler.handleMessage(serverMessage.split(Splitters.MESSAGE_SPLITTER)[1]);
             }
         }

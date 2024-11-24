@@ -16,11 +16,12 @@ public class NodeMessageHandler implements MessageHandler {
     @Override
     public void handleMessage(String messageBody) {
         //Actuator change message
-        String[] splitMessage = messageBody.split(Splitters.MESSAGE_SPLITTER);
-        String type = splitMessage[1].split(Splitters.TYPE_SPLITTER)[0];
+        String[] bodySplit = messageBody.split(Splitters.TYPE_SPLITTER);
+        String type = bodySplit[0];
         //Add more message types here to handle them.
         switch (type) {
-            case "ActuatorChangeMessage" -> this.handleActuatorChangeMessage(splitMessage[1]);
+            case "ActuatorChangeMessage" -> this.handleActuatorChangeMessage(bodySplit[1]);
+            case "RequestNodesMessage" -> this.handleRequestNodesMessage(bodySplit[1]);
             default -> Logger.error("Message type could not be identified.");
         }
     }
@@ -31,5 +32,8 @@ public class NodeMessageHandler implements MessageHandler {
         boolean isOn = Boolean.parseBoolean(values[1]);
         //Update actuator
         node.setActuator(actuatorID, isOn);
+    }
+    private void handleRequestNodesMessage(String clientHandlerID) {
+        this.node.onNodeInfoRequest(clientHandlerID);
     }
 }

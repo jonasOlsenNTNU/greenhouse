@@ -12,22 +12,40 @@ import no.ntnu.message.Splitters;
  */
 public class AddNodeMessage implements Message {
     private final String head;
-    private final String body;
+    private String body;
 
     /**
      * Constructor for an AddNodeMessage.
+     * This message should be sent to all control panels when a node has connected to the server.
      * @param nodeID ID of the node sending the message.
      * @param actuators A collection of actuators on the node.
      */
     public AddNodeMessage(int nodeID, ActuatorCollection actuators) {
         this.head = "controlpanel";
+        this.createBody(nodeID, actuators);
+    }
+    /**
+     * Constructor for an AddNodeMessage.
+     * This message should be a response to a control panel that requested nodes.
+     * @param nodeID ID of the node sending the message.
+     * @param actuators A collection of actuators on the node.
+     * @param clientHandlerID clientHandlerID of the control panel that requested this node.
+     */
+    public AddNodeMessage(int nodeID, ActuatorCollection actuators, String clientHandlerID) {
+        this.head = "controlpanel" + Splitters.HEAD_SPLITTER + clientHandlerID;
+        this.createBody(nodeID, actuators);
+    }
+
+    private void createBody(int nodeID, ActuatorCollection actuators) {
         StringBuilder actuatorsString = new StringBuilder();
         for (Actuator actuator : actuators) {
             actuatorsString.append(actuator.getId()).append(Splitters.VALUES_SPLITTER);
             actuatorsString.append(actuator.getType()).append(Splitters.VALUES_SPLITTER);
-            actuatorsString.append(actuator.isOn()).append(Splitters.VALUES_SPLITTER);
+            actuatorsString.append(actuator.isOn()).append(Splitters.LIST_SPLITTER);
         }
-        actuatorsString.deleteCharAt(actuatorsString.length());
+        if (actuatorsString.length() > 2) {
+            actuatorsString.deleteCharAt(actuatorsString.length() - 1);
+        }
         this.body = "AddNodeMessage"
                 + Splitters.TYPE_SPLITTER + nodeID
                 + Splitters.BODY_SPLITTER + actuatorsString;

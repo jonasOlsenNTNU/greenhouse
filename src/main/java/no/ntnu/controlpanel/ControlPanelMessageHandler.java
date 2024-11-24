@@ -26,13 +26,15 @@ public class ControlPanelMessageHandler implements MessageHandler {
      * @param messageBody The message body of a serialized message.
      */
     public void handleMessage(String messageBody) {
-        String[] splitMessage = messageBody.split(Splitters.MESSAGE_SPLITTER);
-        String type = splitMessage[1].split(Splitters.TYPE_SPLITTER)[0];
+        String[] bodySplit = messageBody.split(Splitters.TYPE_SPLITTER);
+        String type = bodySplit[0];
+        //TODO: Remove Logger after testing
+        Logger.info("Type: " + type);
         switch (type) {
-            case "AddNodeMessage" -> this.handleAddNodeMessage(splitMessage[1]);
-            case "RemoveNodeMessage" -> this.handleRemoveNodeMessage(splitMessage[1]);
-            case "ActuatorUpdateMessage" -> this.handleActuatorUpdateMessage(splitMessage[1]);
-            case "SensorUpdateMessage" -> this.handleSensorUpdateMessage(splitMessage[1]);
+            case "AddNodeMessage" -> this.handleAddNodeMessage(bodySplit[1]);
+            case "RemoveNodeMessage" -> this.handleRemoveNodeMessage(bodySplit[1]);
+            case "ActuatorUpdateMessage" -> this.handleActuatorUpdateMessage(bodySplit[1]);
+            case "SensorUpdateMessage" -> this.handleSensorUpdateMessage(bodySplit[1]);
             default -> Logger.error("Message type could not be identified.");
         }
     }
@@ -46,19 +48,25 @@ public class ControlPanelMessageHandler implements MessageHandler {
         String[] bodyValues = bodyData.split(Splitters.BODY_SPLITTER);
         int nodeID = Parser.parseIntegerOrError(bodyValues[0], "Invalid nodeID");
         SensorActuatorNodeInfo nodeInfo = new SensorActuatorNodeInfo(nodeID);
-        //Add the collection of actuators to the node.
-        String[] actuators = bodyValues[1].split(Splitters.LIST_SPLITTER);
-        for (String actuator : actuators) {
-            String[] values = actuator.split(Splitters.VALUES_SPLITTER);
-            //Parse values to correct data types.
-            int actuatorID = Parser.parseIntegerOrError(values[0], "Invalid id.");
-            String type = values[1];
-            boolean isOn = Boolean.parseBoolean(values[2]);
-            //Create new Actuator, set it to the correct state and add it to the node.
-            Actuator a = new Actuator(actuatorID, type, nodeID);
-            a.set(isOn);
-            nodeInfo.addActuator(a);
+        //Try to a collection of actuators to the node.
+        //Throws an exception if the node has no actuators
+        try {
+            String[] actuators = bodyValues[1].split(Splitters.LIST_SPLITTER);
+            for (String actuator : actuators) {
+                String[] values = actuator.split(Splitters.VALUES_SPLITTER);
+                //Parse values to correct data types.
+                int actuatorID = Parser.parseIntegerOrError(values[0], "Invalid id.");
+                String type = values[1];
+                boolean isOn = Boolean.parseBoolean(values[2]);
+                //Create new Actuator, set it to the correct state and add it to the node.
+                Actuator a = new Actuator(actuatorID, type, nodeID);
+                a.set(isOn);
+                nodeInfo.addActuator(a);
+            }
+        } catch (Exception e) {
+            Logger.info("Node has no actuators.");
         }
+
         this.logic.onNodeAdded(nodeInfo);
     }
 

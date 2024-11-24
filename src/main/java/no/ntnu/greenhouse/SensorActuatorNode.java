@@ -9,6 +9,7 @@ import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
+import no.ntnu.message.greenhouse.AddNodeMessage;
 import no.ntnu.tools.Logger;
 
 /**
@@ -130,6 +131,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       startPeriodicSensorReading();
       running = true;
       notifyStateChanges(true);
+      this.communicationChannel.broadcastNodeInfo();
     }
   }
 
@@ -329,5 +331,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     for (Actuator actuator : actuators) {
       actuator.set(on);
     }
+  }
+
+  public void onNodeInfoRequest(String clientHandlerID) {
+    this.communicationChannel.sendNodeInfo(clientHandlerID);
   }
 }

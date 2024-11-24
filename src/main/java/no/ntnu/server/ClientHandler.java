@@ -22,16 +22,18 @@ public class ClientHandler extends Thread {
     private BufferedReader socketReader;
     private PrintWriter socketWriter;
     private boolean clientConnected;
+    private int clientNumber;
 
     /**
      * Constructor for a ClientHandler
      * @param clientSocket A connected Socket belonging to the client.
      * @param server The Server this object handles clients for.
      */
-    public ClientHandler(Socket clientSocket, Server server) {
+    public ClientHandler(Socket clientSocket, Server server, int clientNumber) {
         this.clientSocket = clientSocket;
         this.server = server;
         this.clientConnected = true;
+        this.clientNumber = clientNumber;
     }
 
     /**
@@ -109,5 +111,8 @@ public class ClientHandler extends Thread {
         socketWriter.println(message);
     }
 
+    public int getClientNumber() {
+        return  this.clientNumber;
+    }
 
 }

@@ -1,6 +1,7 @@
 package no.ntnu.server;
 
 import no.ntnu.message.Splitters;
+import no.ntnu.message.controlpanel.RequestNodesMessage;
 import no.ntnu.message.server.RemoveNodeMessage;
 import no.ntnu.tools.Logger;
 
@@ -19,7 +20,15 @@ public class ServerMessageHandler implements MessageHandler {
             //Note: Case "server" requires the clientHandler.
             //Send to handleServerMessage from the ClientHandler directly.
             case "node" -> server.sendMessageToNode(head[1], message);
-            case "controlpanel" -> server.sendMessageToAllControlPanels(message);
+            case "controlpanel" -> {
+                //Throws an exception if the message does not have a single recipient.
+                try {
+                    int clientHandlerID = Integer.parseInt(head[1]);
+                    server.sendMessageToControlPanel(clientHandlerID, message);
+                } catch (Exception e) {
+                    server.sendMessageToAllControlPanels(message);
+                }
+            }
             default -> Logger.error("Message from client not valid: " + head[0]);
         }
     }
@@ -59,6 +68,8 @@ public class ServerMessageHandler implements MessageHandler {
                     Logger.error("Boolean 'connecting' not valid");
                 }
             }
+            case "RequestNodesMessage" -> server.sendMessageToAllNodes(new RequestNodesMessage(
+                    clientHandler.getClientNumber()).getMessageString());
             default -> Logger.error("Message type not found: " + type);
         }
     }
