@@ -1,5 +1,7 @@
 package no.ntnu.controlpanel;
 
+import no.ntnu.greenhouse.Actuator;
+import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.message.controlpanel.ActuatorChangeMessage;
 import no.ntnu.message.controlpanel.ControlPanelConnectionMessage;
 import no.ntnu.server.Client;
@@ -12,7 +14,7 @@ import java.io.IOException;
  * Connects to a server through a TCP socket.
  * Sends and receives messages through the input and output streams.
  */
-public class ControlPanelCommunicationChannel extends Client implements CommunicationChannel {
+public class ControlPanelCommunicationChannel extends Client implements CommunicationChannel{
     private final ControlPanelLogic logic;
     public ControlPanelCommunicationChannel(ControlPanelLogic logic) {
         this.logic = logic;
@@ -39,4 +41,5 @@ public class ControlPanelCommunicationChannel extends Client implements Communic
     public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
         this.sendMessageToServer(new ActuatorChangeMessage(nodeId, actuatorId, isOn).getMessageString());
     }
+
 }

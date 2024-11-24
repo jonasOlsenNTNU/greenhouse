@@ -42,6 +42,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public SensorActuatorNode(int id) {
     this.id = id;
     this.running = false;
+    this.addSensorListener(communicationChannel);
+    this.addActuatorListener(communicationChannel);
+    this.addStateListener(communicationChannel);
   }
 
   /**
@@ -131,7 +134,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       startPeriodicSensorReading();
       running = true;
       notifyStateChanges(true);
-      this.communicationChannel.broadcastNodeInfo();
     }
   }
 
