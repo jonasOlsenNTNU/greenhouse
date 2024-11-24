@@ -29,7 +29,7 @@ public class ControlPanelMessageHandler implements MessageHandler {
         String[] bodySplit = messageBody.split(Splitters.TYPE_SPLITTER);
         String type = bodySplit[0];
         //TODO: Remove Logger after testing
-        Logger.info("Type: " + type);
+        //Logger.info("Type: " + type);
         switch (type) {
             case "AddNodeMessage" -> this.handleAddNodeMessage(bodySplit[1]);
             case "RemoveNodeMessage" -> this.handleRemoveNodeMessage(bodySplit[1]);

@@ -88,6 +88,9 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     Platform.runLater(() -> addNodeTab(nodeInfo));
+    for (Actuator actuator : nodeInfo.getActuators()) {
+      actuator.setListener(logic);
+    }
   }
 
   @Override
