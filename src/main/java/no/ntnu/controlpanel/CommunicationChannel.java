@@ -27,4 +27,5 @@ public interface CommunicationChannel {
    */
   void closeConnection();
   void sendControlPanelConnectionMessage(boolean connecting);
+  void sendNodeRequestMessage();
 }

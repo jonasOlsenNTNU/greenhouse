@@ -10,15 +10,21 @@ public class RequestNodesMessage implements Message {
 
     /**
      * Constructor for a RequestNodesMessage.
+     * This message can be sent by a control panel to request information about all connected nodes.
      */
     public RequestNodesMessage() {
         this.head = "server";
         this.body = "RequestNodesMessage";
     }
 
+    /**
+     * Constructor for a RequestNodesMessage.
+     * This message can be sent by a server to a node. Contains information about sender.
+     * @param clientHandlerID ID of the client that requested node information.
+     */
     public RequestNodesMessage(int clientHandlerID) {
         this.head = "node";
-        this.body = "RequestNodesMessage" + Splitters.BODY_SPLITTER + clientHandlerID;
+        this.body = "RequestNodesMessage" + Splitters.TYPE_SPLITTER + clientHandlerID;
     }
 
     @Override

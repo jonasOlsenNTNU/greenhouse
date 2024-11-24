@@ -194,11 +194,19 @@ public class FakeCommunicationChannel implements CommunicationChannel {
 
   @Override
   public void closeConnection() {
-
+    Logger.info("CloseConnection() does nothing for the fake channel because it is not connected" +
+            "to a server.");
   }
 
   @Override
   public void sendControlPanelConnectionMessage(boolean connecting) {
+    Logger.info("sendControlPanelConnectionMessage() does nothing for the fake channel because it is not" +
+            "connected to a server.");
+  }
 
+  @Override
+  public void sendNodeRequestMessage() {
+    Logger.info("sendNodeRequestMessage() does nothing for the fake channel because it is not" +
+            "connected to a server.");
   }
 }

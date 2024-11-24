@@ -4,6 +4,7 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.message.controlpanel.ActuatorChangeMessage;
 import no.ntnu.message.controlpanel.ControlPanelConnectionMessage;
+import no.ntnu.message.controlpanel.RequestNodesMessage;
 import no.ntnu.server.Client;
 import no.ntnu.tools.Logger;
 
@@ -40,6 +41,11 @@ public class ControlPanelCommunicationChannel extends Client implements Communic
     @Override
     public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
         this.sendMessageToServer(new ActuatorChangeMessage(nodeId, actuatorId, isOn).getMessageString());
+    }
+
+    @Override
+    public void sendNodeRequestMessage() {
+        this.sendMessageToServer(new RequestNodesMessage().getMessageString());
     }
 
 }

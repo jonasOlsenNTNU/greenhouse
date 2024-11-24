@@ -44,11 +44,9 @@ public class ServerMessageHandler implements MessageHandler {
         String[] bodySplit = message.split(Splitters.MESSAGE_SPLITTER)[1]
                 .split(Splitters.TYPE_SPLITTER);
         String type = bodySplit[0];
-        String[] data = bodySplit[1].split(Splitters.BODY_SPLITTER);
-        //TODO: Remove logger after testing
-        Logger.info(data[0]);
         switch (type) {
             case "NodeConnectionMessage" -> {
+                String[] data = bodySplit[1].split(Splitters.BODY_SPLITTER);
                 String nodeID = data[1];
                 if (data[0].equals("true")) {
                     server.addNewNode(nodeID, clientHandler);
@@ -60,6 +58,7 @@ public class ServerMessageHandler implements MessageHandler {
                 }
             }
             case "ControlPanelConnectionMessage" -> {
+                String[] data = bodySplit[1].split(Splitters.BODY_SPLITTER);
                 if (data[0].equals("true")) {
                     server.addNewControlPanel(clientHandler);
                 } else if (data[0].equals("false")) {

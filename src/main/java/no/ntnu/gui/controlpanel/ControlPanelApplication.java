@@ -77,6 +77,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
       logic.onCommunicationChannelClosed();
     }
     channel.sendControlPanelConnectionMessage(true);
+    channel.sendNodeRequestMessage();
   }
 
   private static Label createEmptyContent() {
