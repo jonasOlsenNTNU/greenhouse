@@ -26,6 +26,15 @@ public interface CommunicationChannel {
    * Close the communication channel.
    */
   void closeConnection();
+
+  /**
+   * Notify the server when the control panel is connecting/disconnecting.
+   * @param connecting True if connecting, false if disconnecting.
+   */
   void sendControlPanelConnectionMessage(boolean connecting);
+
+  /**
+   * Request node information from nodes already connected to the server.
+   */
   void sendNodeRequestMessage();
 }
