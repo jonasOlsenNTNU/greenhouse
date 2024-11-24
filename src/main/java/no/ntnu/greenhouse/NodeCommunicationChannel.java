@@ -13,20 +13,34 @@ import no.ntnu.tools.Logger;
 import java.util.List;
 
 /**
- * Communication channel for a node.
+ * A TCP Client designed for SensorActuator nodes.
+ * <p></p>Uses a NodeMessageHandler to handle incoming messages.
  */
 public class NodeCommunicationChannel extends Client implements ActuatorListener, NodeStateListener, SensorListener {
-    private SensorActuatorNode node;
+    private final SensorActuatorNode node;
+
+    /**
+     * Constructor for a NodeCommunicationChannel.
+     * @param node The SensorActuatorNode this client belongs to.
+     */
     public NodeCommunicationChannel(SensorActuatorNode node) {
         this.node = node;
         this.setMessageHandler(new NodeMessageHandler(this.node));
     }
 
+    /**
+     * Notify the server when the node is connecting/disconnecting.
+     * @param connecting True if connecting, false if disconnecting.
+     */
     public void sendConnectionMessage(boolean connecting) {
         String message = new NodeConnectionMessage(node.getId(), connecting).getMessageString();
         this.sendMessageToServer(message);
     }
 
+    /**
+     * Send information about this node when requested.
+     * @param clientHandlerID The ID of the client that requested the information.
+     */
     public void sendNodeInfo(String clientHandlerID) {
         this.sendMessageToServer(new AddNodeMessage(
                 node.getId(), node.getActuators(), clientHandlerID).getMessageString());
