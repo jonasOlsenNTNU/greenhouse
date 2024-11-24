@@ -18,7 +18,7 @@ import no.ntnu.tools.Logger;
 public class SensorActuatorNode implements ActuatorListener, CommunicationChannelListener {
   // How often to generate new sensor values, in seconds.
   private static final long SENSING_DELAY = 5000;
-  public int nodeId;
+  public final int nodeId;
 
   private final List<Sensor> sensors = new LinkedList<>();
   private final ActuatorCollection actuators = new ActuatorCollection();
@@ -40,7 +40,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param id A unique ID of the node
    */
   public SensorActuatorNode(int id) {
-    this.nodeId = nodeId;
+    this.nodeId = id;
     this.running = false;
     this.addSensorListener(communicationChannel);
     this.addActuatorListener(communicationChannel);
