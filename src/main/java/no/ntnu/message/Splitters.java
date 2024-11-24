@@ -19,7 +19,7 @@ public final class Splitters {
      * Separates values in the message body.
      * Example: nodeID*actuatorID*isOn
      */
-    public static final String BODY_SPLITTER = "/";
+    public static final String BODY_SPLITTER = "\\*";
     /**
      * Separates the type and rest of the message body.
      * Example: type!body_values

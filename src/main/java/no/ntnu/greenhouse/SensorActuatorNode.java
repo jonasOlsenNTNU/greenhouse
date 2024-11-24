@@ -9,6 +9,7 @@ import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
+import no.ntnu.message.greenhouse.AddNodeMessage;
 import no.ntnu.tools.Logger;
 
 /**
@@ -25,6 +26,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private final List<SensorListener> sensorListeners = new LinkedList<>();
   private final List<ActuatorListener> actuatorListeners = new LinkedList<>();
   private final List<NodeStateListener> stateListeners = new LinkedList<>();
+  private final NodeCommunicationChannel communicationChannel = new NodeCommunicationChannel(this);
 
   Timer sensorReadingTimer;
 
@@ -40,6 +42,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public SensorActuatorNode(int id) {
     this.nodeId = nodeId;
     this.running = false;
+    this.addSensorListener(communicationChannel);
+    this.addActuatorListener(communicationChannel);
+    this.addStateListener(communicationChannel);
   }
 
   /**
@@ -130,6 +135,22 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       running = true;
       notifyStateChanges(true);
     }
+  }
+
+  /**
+   * Initiate communication with the server.
+   */
+  public void startCommunication() {
+    this.communicationChannel.open();
+    this.communicationChannel.sendConnectionMessage(true);
+  }
+
+  /**
+   * Stop communication with the server.
+   */
+  public void stopCommunication() {
+    this.communicationChannel.sendConnectionMessage(false);
+    this.communicationChannel.closeConnection();
   }
 
   /**
@@ -312,5 +333,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     for (Actuator actuator : actuators) {
       actuator.set(on);
     }
+  }
+
+  public void onNodeInfoRequest(String clientHandlerID) {
+    this.communicationChannel.sendNodeInfo(clientHandlerID);
   }
 }

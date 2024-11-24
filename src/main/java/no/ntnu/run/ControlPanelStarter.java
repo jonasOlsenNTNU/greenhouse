@@ -7,8 +7,6 @@ import no.ntnu.controlpanel.FakeCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
 
-import javax.naming.ldap.Control;
-
 /**
  * Starter class for the control panel.
  * Note: we could launch the Application class directly, but then we would have issues with the
@@ -46,7 +44,7 @@ public class ControlPanelStarter {
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
-    stopCommunication();
+    stopCommunication(channel);
   }
 
   private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
@@ -60,18 +58,9 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    // TODO - here you initiate TCP/UDP socket communication
-    // You communication class(es) may want to get reference to the logic and call necessary
-    // logic methods when events happen (for example, when sensor data is received)
-    Logger.info("Initializing socket communication with: ");
-    ControlPanelCommunicationChannel channel =  new ControlPanelCommunicationChannel(logic);
-    if(channel.open()){
-      Logger.info("Socket communication succesfully established.");
-      return channel;
-    }else{
-      Logger.error("Failed to establish the socket communication.");
-    return null;
-    }
+    ControlPanelCommunicationChannel communicationChannel = new ControlPanelCommunicationChannel(logic);
+    logic.setCommunicationChannel(communicationChannel);
+    return communicationChannel;
   }
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {
@@ -102,7 +91,7 @@ public class ControlPanelStarter {
     return spawner;
   }
 
-  private void stopCommunication() {
-    // TODO - here you stop the TCP/UDP socket communication
+  private void stopCommunication(CommunicationChannel communicationChannel) {
+    communicationChannel.closeConnection();
   }
 }

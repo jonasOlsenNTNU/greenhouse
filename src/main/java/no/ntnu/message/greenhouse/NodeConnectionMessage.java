@@ -21,8 +21,7 @@ public class NodeConnectionMessage implements Message {
     public NodeConnectionMessage(int nodeID, boolean connecting) {
         this.head = "server";
         this.body = "NodeConnectionMessage"
-                + Splitters.TYPE_SPLITTER + "node"
-                + Splitters.BODY_SPLITTER + connecting
+                + Splitters.TYPE_SPLITTER + connecting
                 + Splitters.BODY_SPLITTER + nodeID;
     }
 

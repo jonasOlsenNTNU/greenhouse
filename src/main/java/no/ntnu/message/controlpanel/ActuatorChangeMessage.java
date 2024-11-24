@@ -12,8 +12,7 @@ public class ActuatorChangeMessage implements Message {
         this.head = "node"
                 + Splitters.HEAD_SPLITTER + nodeId;
         this.body = "ActuatorChangeMessage"
-                + Splitters.TYPE_SPLITTER + nodeId
-                + Splitters.BODY_SPLITTER + actuatorId
+                + Splitters.TYPE_SPLITTER + actuatorId
                 + Splitters.BODY_SPLITTER + isOn;
     }
 
