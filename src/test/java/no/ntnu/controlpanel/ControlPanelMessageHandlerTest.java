@@ -23,11 +23,11 @@ class ControlPanelMessageHandlerTest {
     ControlPanelLogic logic = mock(ControlPanelLogic.class);
     ControlPanelMessageHandler handler = new ControlPanelMessageHandler(logic);
 
-    String validMessage = "AddNodeMessage#1/2,window,true;3,fan,false;";
+    String validMessage = "AddNodeMessage!1*2,window,true;3,fan,false;";
     handler.handleMessage(validMessage);
     verify(logic).onNodeAdded(any(SensorActuatorNodeInfo.class));
 
-    String invalidMessage = "AddNodeMessage#abc/2,window,true;3,fan,false;";
+    String invalidMessage = "AddNodeMessage!abc*2,window,true;3,fan,false;";
     assertThrows(NumberFormatException.class, () -> handler.handleMessage(invalidMessage));
   }
   @Test
@@ -35,13 +35,13 @@ class ControlPanelMessageHandlerTest {
     ControlPanelLogic logic = mock(ControlPanelLogic.class);
     ControlPanelMessageHandler handler = new ControlPanelMessageHandler(logic);
 
-    String validMessage = "RemoveNodeMessage#1";
+    String validMessage = "RemoveNodeMessage!1";
     String bodyData = "1";
 
     messageHandler.handleMessage(validMessage);
     verify(logicMock).onNodeRemoved(1);
 
-    String invalidMessage = "RemoveNodeMessage#abc";
+    String invalidMessage = "RemoveNodeMessage!abc";
       assertThrows(NumberFormatException.class, () -> handler.handleMessage(invalidMessage));
   }
   @Test
@@ -49,12 +49,12 @@ class ControlPanelMessageHandlerTest {
       ControlPanelLogic logic = mock(ControlPanelLogic.class);
       ControlPanelMessageHandler handler = new ControlPanelMessageHandler(logic);
 
-      String validMessage = "ActuatorUpdateMessage#1/2/true";
+      String validMessage = "ActuatorUpdateMessage!1*2*true";
       handler.handleMessage(validMessage);
 
       verify(logic).onActuatorStateChanged(eq(1), eq(2), eq(true));
 
-      String invalidMessage = "ActuatorUpdateMessage#abc/2/true";
+      String invalidMessage = "ActuatorUpdateMessage!abc*2*true";
       assertThrows(NumberFormatException.class, () -> handler.handleMessage(invalidMessage));
   }
   @Test
@@ -62,7 +62,7 @@ class ControlPanelMessageHandlerTest {
       ControlPanelLogic logicMock = mock(ControlPanelLogic.class);
       ControlPanelMessageHandler handler = new ControlPanelMessageHandler(logicMock);
 
-      String validMessage = "SensorUpdateMessage#1/temperature,25.5,Celsius;humidity,45.0,Percent";
+      String validMessage = "SensorUpdateMessage!1*temperature,25.5,Celsius;humidity,45.0,Percent";
       handler.handleMessage(validMessage);
 
       ArrayList<SensorReading> expectedReadings = new ArrayList<>();
@@ -70,5 +70,11 @@ class ControlPanelMessageHandlerTest {
       expectedReadings.add(new SensorReading("humidity", 45.0, "Percent"));
 
       verify(logicMock).onSensorData(eq(1), eq(expectedReadings));
+
+      String invalidMessage = "SensorUpdateMessage!1*humidity,25.5,Celsius";
+      handler.handleMessage(invalidMessage);
+
+      assertThrows(IllegalArgumentException.class, () -> handler.handleMessage(invalidMessage));
   }
+
 }

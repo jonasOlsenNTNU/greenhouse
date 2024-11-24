@@ -3,6 +3,7 @@ package no.ntnu.greenhouse;
 import java.util.HashMap;
 import java.util.Map;
 import no.ntnu.listeners.common.ActuatorListener;
+import no.ntnu.tools.Logger;
 
 /**
  * An actuator that can change the environment in a way. The actuator will make impact on the
@@ -96,6 +97,7 @@ public class Actuator {
   public void toggle() {
     this.on = !this.on;
     notifyChanges();
+    Logger.info("The actuator is now on");
   }
 
   private void notifyChanges() {
@@ -144,6 +146,7 @@ public class Actuator {
     if (!on) {
       on = true;
       notifyChanges();
+      Logger.info("The actuator is now on");
     }
   }
 
@@ -154,6 +157,7 @@ public class Actuator {
     if (on) {
       on = false;
       notifyChanges();
+      Logger.info("The actuator is now off");
     }
   }
 
