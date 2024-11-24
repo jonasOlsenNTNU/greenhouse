@@ -74,6 +74,7 @@ public class GreenhouseSimulator {
   private void initiateRealCommunication() {
    if(server == null||!server.isRunning()){
      server  = new Server();
+     initiateFakePeriodicSwitches();
      server.start();
      Logger.info("Communication initiated and the server is now listening for connections.");
    }else{
@@ -96,13 +97,46 @@ public class GreenhouseSimulator {
     }
   }
 
+  /**
+   * Stop the communication with all nodes in the greenhouse.
+   * This method iterates through all the nodes and stops the communication with each one.
+   * It first checks if the node is currently running before stopping it.
+   * After successfully stopping the communication with each node, a log message is generated.
+   */
   private void stopCommunication() {
+    Logger.info("Stopping the communication with nodes");
+    //Here we iterate through all the nodes and stop the communication with each
+    for(SensorActuatorNode node : nodes.values()){
+      if(node.isRunning()){
+        node.stop();
+        Logger.info("Communication with node "+node.getId()+" has been successfully stopped");
+      }
+    }
+    Logger.info("All nodes communications have been stopped");
+  }
+
+  /**
+   * Stops the communication with a specified node in the greenhouse.
+   * If the communication mode is set to fake, stops all periodic switches.
+   *
+   * @param nodeId The id of the node to stop the communication with
+   */
+  private void stopCommunicationById(int nodeId) {
+    SensorActuatorNode node = nodes.get(nodeId);
     if (fake) {
       for (PeriodicSwitch periodicSwitch : periodicSwitches) {
         periodicSwitch.stop();
       }
     } else {
-      // TODO - here you stop the TCP/UDP communication
+      //Stopping the communication between the greenhouse and a node.
+      if(node != null && node.isRunning()){
+        Logger.info("--Stopping the communication with node " + nodeId);
+        node.stop();
+        Logger.info("Communication with the node " + nodeId + "has been stopped.");
+      }
+      else{
+        Logger.info("No active communication with node " + nodeId + "or node has already been stopped.");
+      }
     }
   }
 

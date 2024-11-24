@@ -49,6 +49,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
         boolean success = false;
         try {
             this.socket = new Socket("localhost", 8585);
+            System.out.println("Succesfully connected to the server");
             success = true;
         } catch (IOException e) {
             Logger.error("Could not connect to the server: " + e.getMessage());

@@ -35,6 +35,7 @@ public class Server {
      */
     public void start() {
         this.serverSocket = openListeningSocket(portNumber);
+        System.out.println("Server started on port " + portNumber);
         while(isRunning) {
             Socket clientSocket = acceptNextClientConnection();
             if (clientSocket != null) {

@@ -1,10 +1,13 @@
 package no.ntnu.run;
 
 import no.ntnu.controlpanel.CommunicationChannel;
+import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
+
+import javax.naming.ldap.Control;
 
 /**
  * Starter class for the control panel.
@@ -60,7 +63,15 @@ public class ControlPanelStarter {
     // TODO - here you initiate TCP/UDP socket communication
     // You communication class(es) may want to get reference to the logic and call necessary
     // logic methods when events happen (for example, when sensor data is received)
+    Logger.info("Initializing socket communication with: ");
+    ControlPanelCommunicationChannel channel =  new ControlPanelCommunicationChannel(logic);
+    if(channel.open()){
+      Logger.info("Socket communication succesfully established.");
+      return channel;
+    }else{
+      Logger.error("Failed to establish the socket communication.");
     return null;
+    }
   }
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {

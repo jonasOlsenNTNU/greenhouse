@@ -21,10 +21,11 @@ public class Parser {
    *                               throw an exception with the provided error message
    */
   public static int parseIntegerOrError(String s, String errorMessage) {
+
     try {
-      return Integer.parseInt(s);
+      return Integer.parseInt(s.trim());
     } catch (NumberFormatException e) {
-      throw new NumberFormatException(errorMessage);
+      throw new NumberFormatException(errorMessage + ": error message thrown by parser: "+ s);
     }
   }
 
