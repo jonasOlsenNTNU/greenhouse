@@ -102,6 +102,7 @@ public class ControlPanelMessageHandler implements MessageHandler {
         //Parse all sensor readings and add them to a list of sensor readings.
         ArrayList<SensorReading> sensors = new ArrayList<>();
         String[] sensorReadings = values[1].split(Splitters.LIST_SPLITTER);
+//        Logger.info("The values are : " + values + " and " + sensorReadings);
         for (String reading : sensorReadings) {
             String[] sensorInfo = reading.split(Splitters.VALUES_SPLITTER);
             String type = sensorInfo[0];

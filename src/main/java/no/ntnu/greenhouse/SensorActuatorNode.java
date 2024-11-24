@@ -18,7 +18,7 @@ import no.ntnu.tools.Logger;
 public class SensorActuatorNode implements ActuatorListener, CommunicationChannelListener {
   // How often to generate new sensor values, in seconds.
   private static final long SENSING_DELAY = 5000;
-  private final int id;
+  public int nodeId;
 
   private final List<Sensor> sensors = new LinkedList<>();
   private final ActuatorCollection actuators = new ActuatorCollection();
@@ -40,7 +40,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param id A unique ID of the node
    */
   public SensorActuatorNode(int id) {
-    this.id = id;
+    this.nodeId = nodeId;
     this.running = false;
     this.addSensorListener(communicationChannel);
     this.addActuatorListener(communicationChannel);
@@ -53,7 +53,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @return the ID
    */
   public int getId() {
-    return id;
+    return nodeId;
   }
 
   /**
@@ -89,7 +89,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public void addActuator(Actuator actuator) {
     actuator.setListener(this);
     actuators.add(actuator);
-    Logger.info("Created " + actuator.getType() + "[" + actuator.getId() + "] on node " + id);
+    Logger.info("Created " + actuator.getType() + "[" + actuator.getId() + "] on node " + nodeId);
   }
 
   /**
@@ -158,7 +158,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    */
   public void stop() {
     if (running) {
-      Logger.info("-- Stopping simulation of node " + id);
+      Logger.info("-- Stopping simulation of node " + nodeId);
       stopPeriodicSensorReading();
       running = false;
       notifyStateChanges(false);
@@ -196,7 +196,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * Generate new sensor values and send a notification to all listeners.
    */
   public void generateNewSensorValues() {
-    Logger.infoNoNewline("Node #" + id);
+    Logger.infoNoNewline("Node #" + nodeId);
     addRandomNoiseToSensors();
     notifySensorChanges();
     debugPrint();
@@ -226,7 +226,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public void toggleActuator(int actuatorId) {
     Actuator actuator = getActuator(actuatorId);
     if (actuator == null) {
-      throw new IllegalArgumentException("actuator[" + actuatorId + "] not found on node " + id);
+      throw new IllegalArgumentException("actuator[" + actuatorId + "] not found on node " + nodeId);
     }
     actuator.toggle();
   }
@@ -249,9 +249,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   private void notifyActuatorChange(Actuator actuator) {
     String onOff = actuator.isOn() ? "ON" : "off";
-    Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
+    Logger.info(" => " + actuator.getType() + " on node " + nodeId + " " + onOff);
     for (ActuatorListener listener : actuatorListeners) {
-      listener.actuatorUpdated(id, actuator);
+      listener.actuatorUpdated(nodeId, actuator);
     }
   }
 
@@ -263,7 +263,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    *                when false - that this node is shut down
    */
   private void notifyStateChanges(boolean isReady) {
-    Logger.info("Notify state changes for node " + id);
+    Logger.info("Notify state changes for node " + nodeId);
     for (NodeStateListener listener : stateListeners) {
       if (isReady) {
         listener.onNodeReady(this);
@@ -307,7 +307,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   @Override
   public void onCommunicationChannelClosed() {
-    Logger.info("Communication channel closed for node " + id);
+    Logger.info("Communication channel closed for node " + nodeId);
     stop();
   }
 

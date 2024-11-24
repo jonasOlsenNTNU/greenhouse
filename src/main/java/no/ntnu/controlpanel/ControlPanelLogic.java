@@ -52,17 +52,20 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   public void addListener(GreenhouseEventListener listener) {
     if (!listeners.contains(listener)) {
       listeners.add(listener);
+      Logger.info("Listener added to control panel " + listener);
     }
   }
 
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
+    Logger.info("Node added to control panel " + nodeInfo);
   }
 
   @Override
   public void onNodeRemoved(int nodeId) {
     listeners.forEach(listener -> listener.onNodeRemoved(nodeId));
+    Logger.info("Node removed from control panel " + nodeId);
   }
 
   @Override
