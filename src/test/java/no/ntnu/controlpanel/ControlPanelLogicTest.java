@@ -72,10 +72,10 @@ class ControlPanelLogicTest {
     @Test
     void testOnActuatorStateChanged() {
         logic.addListener(listenerMock);
-        //Should come out positive
+
         logic.onActuatorStateChanged(1,1,false);
         verify(listenerMock).onActuatorStateChanged(eq(1),eq(1),eq(false));
-        //Comes out positive if the method throws exception NumberFormatException
+
         assertThrows(NumberFormatException.class, ()
                 -> logic.onActuatorStateChanged(Integer.parseInt("abc"),1,true));
     }
