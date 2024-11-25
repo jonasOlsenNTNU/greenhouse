@@ -49,6 +49,7 @@ public class AddNodeMessage implements Message {
         this.body = "AddNodeMessage"
                 + Splitters.TYPE_SPLITTER + nodeID
                 + Splitters.BODY_SPLITTER + actuatorsString;
+        System.out.println("Splitter used is: " + Splitters.BODY_SPLITTER +" Actuator given: " + actuatorsString);
     }
 
     @Override

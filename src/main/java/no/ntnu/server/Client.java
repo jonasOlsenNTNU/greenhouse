@@ -12,7 +12,7 @@ import java.net.Socket;
 public abstract class Client {
     private MessageHandler messageHandler;
     protected BufferedReader socketReader;
-    protected PrintWriter socketWriter;
+    public PrintWriter socketWriter;
     protected Socket socket;
     protected boolean connected;
     protected Client() {
