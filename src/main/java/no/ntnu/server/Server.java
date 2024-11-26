@@ -1,5 +1,6 @@
 package no.ntnu.server;
 
+import no.ntnu.greenhouse.Actuator;
 import no.ntnu.tools.Logger;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class Server {
     private boolean isRunning;
     private static final int portNumber = 8585;
     protected final ServerMessageHandler messageHandler = new ServerMessageHandler(this);
-
+    private Actuator actuator;
     /**
      * Normal constructor for a server object.
      * Call Server.start() to start the server.
@@ -127,9 +128,27 @@ public class Server {
         this.nodes.get(id).sendMessageToClient(message);
     }
 
+    /**
+     * Send a message to all connected nodes.
+     *
+     * @param message The message to be sent to all nodes.
+     */
     public void sendMessageToAllNodes(String message) {
         for (ClientHandler c : nodes.values()) {
             c.sendMessageToClient(message);
+        }
+    }
+
+    /**
+     *
+     * @param type
+     * @param message
+     */
+    public void sendMessageToActuatorType(String type, String message){
+        if (type.equals(actuator.getType())){
+            for (ClientHandler c : controlpanels.values()) {
+                c.sendMessageToClient(message);
+            }
         }
     }
 

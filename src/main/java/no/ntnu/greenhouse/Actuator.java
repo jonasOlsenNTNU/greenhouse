@@ -175,6 +175,10 @@ public class Actuator {
     return nodeId;
   }
 
+  public String getActuatorType(){
+    return type;
+  }
+
   /**
    * Set the actuator to the desired state.
    *
