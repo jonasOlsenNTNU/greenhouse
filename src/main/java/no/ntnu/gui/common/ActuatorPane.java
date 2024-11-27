@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
+import no.ntnu.server.Server;
 import no.ntnu.tools.Logger;
 
 /**
@@ -23,6 +24,7 @@ import no.ntnu.tools.Logger;
 public class ActuatorPane extends TitledPane {
   private final Map<Actuator, SimpleStringProperty> actuatorValue = new HashMap<>();
   private final Map<Actuator, SimpleBooleanProperty> actuatorActive = new HashMap<>();
+  private Server server;
 
   /**
    * Create an actuator pane.
@@ -31,12 +33,31 @@ public class ActuatorPane extends TitledPane {
    */
   public ActuatorPane(ActuatorCollection actuators) {
     super();
+    this.server = new Server();
     setText("Actuators");
     VBox vbox = new VBox();
     vbox.setSpacing(10);
     setContent(vbox);
     addActuatorControls(actuators, vbox);
+    AddTypeControlSection(vbox);
     GuiTools.stretchVertically(this);
+  }
+
+  private void AddTypeControlSection(Pane parent) {
+    Map<String, CheckBox> typeCheckBoxes = new HashMap<>();
+    for(Actuator actuator: actuatorActive.keySet()){
+      String type = actuator.getType();
+      if(!typeCheckBoxes.containsKey(type)){
+        CheckBox checkBox = new CheckBox(type+ ": " + actuator.isOn());
+        typeCheckBoxes.put(type, checkBox);
+
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+          boolean state = newValue;
+          server.sendMessageToActuatorType(actuator.getActuatorType(),state);
+        });
+        parent.getChildren().add(checkBox);
+      }
+    }
   }
 
   private void addActuatorControls(ActuatorCollection actuators, Pane parent) {

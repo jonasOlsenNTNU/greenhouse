@@ -1,8 +1,12 @@
 package no.ntnu.greenhouse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import no.ntnu.listeners.common.ActuatorListener;
+import no.ntnu.server.ClientHandler;
+import no.ntnu.server.Server;
 import no.ntnu.tools.Logger;
 
 /**
@@ -15,10 +19,10 @@ public class Actuator {
   private final int nodeId;
   private final int id;
   private Map<String, Double> impacts = new HashMap<>();
-
   private ActuatorListener listener;
 
   private boolean on;
+  private Server server;
 
   /**
    * Create an actuator. An ID will be auto-generated.

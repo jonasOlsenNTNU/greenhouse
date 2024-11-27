@@ -1,10 +1,7 @@
 package no.ntnu.greenhouse;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
@@ -21,14 +18,14 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public final int nodeId;
 
   private final List<Sensor> sensors = new LinkedList<>();
-  private final ActuatorCollection actuators = new ActuatorCollection();
+  public final ActuatorCollection actuators = new ActuatorCollection();
 
   private final List<SensorListener> sensorListeners = new LinkedList<>();
   private final List<ActuatorListener> actuatorListeners = new LinkedList<>();
   private final List<NodeStateListener> stateListeners = new LinkedList<>();
   private final NodeCommunicationChannel communicationChannel = new NodeCommunicationChannel(this);
 
-  Timer sensorReadingTimer;
+  private Timer sensorReadingTimer;
 
   private boolean running;
   private final Random random = new Random();
@@ -46,7 +43,24 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     this.addActuatorListener(communicationChannel);
     this.addStateListener(communicationChannel);
   }
-
+  /** //TODO
+   * Find and return a list of actuators based on the given type.
+   *
+   * @param type The type of actuators to search for.
+   * @return A list of Actuator objects with the specified type.
+   */
+  public List<Actuator> findActuatorByType(String type){
+    Logger.info("The type that is being searched for is " + type);
+    List<Actuator> matchingActuators = new ArrayList<>();
+    for (Actuator actuator : actuators) {
+      Logger.info("Actuators being searched for are " + actuator.getType());
+      if (actuator.getType().equalsIgnoreCase((type))) {
+        Logger.info("The list of matching actuators is: " + matchingActuators);
+        matchingActuators.add(actuator);
+      }
+    }
+    return matchingActuators;
+  }
   /**
    * Get the unique ID of the node.
    *
@@ -302,8 +316,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @return A collection of the actuators
    */
   public ActuatorCollection getActuators() {
-    return actuators;
+    return this.actuators;
   }
+
 
   @Override
   public void onCommunicationChannelClosed() {

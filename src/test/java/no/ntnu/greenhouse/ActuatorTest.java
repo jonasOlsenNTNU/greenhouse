@@ -55,13 +55,6 @@ class ActuatorTest {
         actuator1.turnOff();
         actuator1.applyImpact(nodeMock);
         verify(nodeMock).applyActuatorImpact("temperature", -5);
-
-//        Actuator actuator2 = new Actuator(1,"window",2);
-//
-//        actuator2.turnOn();
-//        actuator2.applyImpact(nodeMock);
-//        actuator1
-//
     }
 
     @Test
@@ -75,5 +68,6 @@ class ActuatorTest {
         assertFalse(actuator1.isOn());
         assertFalse(clone.isOn());
     }
+
 
 }

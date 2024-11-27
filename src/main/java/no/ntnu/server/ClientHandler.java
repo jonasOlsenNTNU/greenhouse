@@ -1,5 +1,6 @@
 package no.ntnu.server;
 
+import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.tools.Logger;
 
 import java.io.BufferedReader;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * A handler for a single client socket.
@@ -86,7 +88,6 @@ public class ClientHandler extends Thread {
         }
         //TODO: Remove client from server (disconnected)
     }
-
     /**
      * Attempts to read a serialized message from the sockets input stream.
      * Updates isConnected if the socket is disconnected and throws an exception.
@@ -114,5 +115,4 @@ public class ClientHandler extends Thread {
     public int getClientNumber() {
         return  this.clientNumber;
     }
-
 }

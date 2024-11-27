@@ -1,8 +1,9 @@
 package no.ntnu.greenhouse;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+
+import no.ntnu.server.ClientHandler;
+import no.ntnu.server.Server;
 import no.ntnu.tools.Logger;
 
 /**
@@ -10,7 +11,8 @@ import no.ntnu.tools.Logger;
  */
 public class ActuatorCollection implements Iterable<Actuator> {
   private final Map<Integer, Actuator> actuators = new HashMap<>();
-
+  private Server server;
+  private SensorActuatorNode sensorActuatorNode;
   /**
    * Print a short info about all the actuators. Usable for debugging. Does NOT print a newline!
    */
@@ -40,6 +42,10 @@ public class ActuatorCollection implements Iterable<Actuator> {
     return actuators.get(id);
   }
 
+  public Map<Integer, Actuator> getActuators() {
+    return new HashMap<>(actuators);
+  }
+
   @Override
   public Iterator<Actuator> iterator() {
     return actuators.values().iterator();
@@ -53,4 +59,22 @@ public class ActuatorCollection implements Iterable<Actuator> {
   public int size() {
     return actuators.size();
   }
+//  /** //TODO
+//   * Find and return a list of actuators based on the given type.
+//   *
+//   * @param type The type of actuators to search for.
+//   * @return A list of Actuator objects with the specified type.
+//   */
+//  public List<Actuator> findActuatorByType(String type){
+//    Logger.info("The type that is being searched for is " +type);
+//    List<Actuator> matchingActuators = new ArrayList<>();
+//      for (Actuator actuator : sensorActuatorNode.getActuators()) {
+//        Logger.info("Actuators being searched for are " + actuator.getType());
+//        if (actuator.getType().equalsIgnoreCase((type))) {
+//          Logger.info("The list of matching actuators is: " + matchingActuators);
+//          matchingActuators.add(actuator);
+//        }
+//    }
+//    return matchingActuators;
+//  }
 }

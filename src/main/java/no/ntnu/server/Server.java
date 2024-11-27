@@ -1,13 +1,16 @@
 package no.ntnu.server;
 
+import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.ActuatorCollection;
+import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.tools.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A server that handles communication between greenhouse nodes and control panels.
@@ -21,6 +24,10 @@ public class Server {
     private static final int portNumber = 8585;
     protected final ServerMessageHandler messageHandler = new ServerMessageHandler(this);
     private Actuator actuator;
+    private CommunicationChannel communicationChannel;
+    private ActuatorCollection actuatorCollection;
+    private SensorActuatorNode sensorActuatorNode;
+
     /**
      * Normal constructor for a server object.
      * Call Server.start() to start the server.
@@ -31,6 +38,9 @@ public class Server {
         this.isRunning = false;
     }
 
+    public HashMap<String, ClientHandler> getNodes(){
+        return  this.nodes;
+    }
     /**
      * Starts the server by opening a listening socket.
      * The server accepts incoming connections until it stops running.
@@ -66,6 +76,30 @@ public class Server {
         return clientSocket;
     }
 
+    public void sendMessageToActuatorType(String actuatorType, Boolean message){
+
+        if(sensorActuatorNode == null) {
+            Logger.error("sensorActuatorNode is null");
+            return;
+        }
+        Logger.info("Sending message to " + actuatorType + " and the message is: " + message);
+        List<Actuator> actuatorsByType = sensorActuatorNode.findActuatorByType(actuatorType);
+        Logger.info("The actuators found are "+ actuatorsByType);
+        for (Actuator actuator1 : actuatorsByType) {
+            communicationChannel.sendActuatorChange(actuator.getNodeId(), actuator.getId(), message);
+        }
+    }
+
+    /**
+     * Send a message to all connected nodes.
+     *
+     * @param message The message to be sent to all nodes.
+     */
+    public void sendMessageToAllNodes(String message) {
+        for (ClientHandler c : nodes.values()) {
+            c.sendMessageToClient(message);
+        }
+    }
     /**
      * Create a ServerSocket for the server.
      * If successful isRunning is set to true.
@@ -94,6 +128,7 @@ public class Server {
     public void addNewNode(String id, ClientHandler nodeClientHandler) {
         this.nodes.put(id, nodeClientHandler);
     }
+
 
     /**
      * Add a ClientHandler for a control panel to the list of control panels.
@@ -128,29 +163,6 @@ public class Server {
         this.nodes.get(id).sendMessageToClient(message);
     }
 
-    /**
-     * Send a message to all connected nodes.
-     *
-     * @param message The message to be sent to all nodes.
-     */
-    public void sendMessageToAllNodes(String message) {
-        for (ClientHandler c : nodes.values()) {
-            c.sendMessageToClient(message);
-        }
-    }
-
-    /**
-     *
-     * @param type
-     * @param message
-     */
-    public void sendMessageToActuatorType(String type, String message){
-        if (type.equals(actuator.getType())){
-            for (ClientHandler c : controlpanels.values()) {
-                c.sendMessageToClient(message);
-            }
-        }
-    }
 
     public void sendMessageToControlPanel(int clientHandlerID, String message) {
         this.controlpanels.get(clientHandlerID).sendMessageToClient(message);
