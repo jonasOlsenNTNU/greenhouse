@@ -39,39 +39,55 @@ public class ActuatorPane extends TitledPane {
     vbox.setSpacing(10);
     setContent(vbox);
     addActuatorControls(actuators, vbox);
-    AddTypeControlSection(vbox);
     GuiTools.stretchVertically(this);
   }
 
-  private void AddTypeControlSection(Pane parent) {
-    Map<String, CheckBox> typeCheckBoxes = new HashMap<>();
-    for(Actuator actuator: actuatorActive.keySet()){
-      String type = actuator.getType();
-      if(!typeCheckBoxes.containsKey(type)){
-        CheckBox checkBox = new CheckBox(type+ ": " + actuator.isOn());
-        typeCheckBoxes.put(type, checkBox);
+//  private void AddTypeControlSection(Pane parent) {
+//    Map<String, CheckBox> typeCheckBoxes = new HashMap<>();
+//    for(Actuator actuator: actuatorActive.keySet()){
+//      String type = actuator.getType();
+//      if(!typeCheckBoxes.containsKey(type)){
+//        CheckBox checkBox = new CheckBox(type+ ": " + actuator.isOn());
+//        typeCheckBoxes.put(type, checkBox);
+//
+//        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//          boolean state = newValue;
+//        });
+//        parent.getChildren().add(checkBox);
+//      }
+//    }
+//  }
 
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-          boolean state = newValue;
-          server.sendMessageToActuatorType(actuator.getActuatorType(),state);
-        });
-        parent.getChildren().add(checkBox);
-      }
-    }
-  }
-
+  /**
+   * Adds GUI controls for actuators to a parent pane.
+   *
+   * @param actuators A collection of actuators to generate GUI controls for
+   * @param parent The parent pane where the GUI controls will be added
+   */
   private void addActuatorControls(ActuatorCollection actuators, Pane parent) {
     actuators.forEach(actuator ->
         parent.getChildren().add(createActuatorGui(actuator))
     );
   }
 
+  /**
+   * Creates a GUI representation of an Actuator, containing a label and a checkbox for toggling its state.
+   *
+   * @param actuator The Actuator object for which the GUI representation is being created
+   * @return A JavaFX Node representing the graphical user interface for the Actuator
+   */
   private Node createActuatorGui(Actuator actuator) {
     HBox actuatorGui = new HBox(createActuatorLabel(actuator), createActuatorCheckbox(actuator));
     actuatorGui.setSpacing(5);
     return actuatorGui;
   }
 
+  /**
+   * Creates a checkbox UI component for an Actuator with bidirectional binding to the actuator's state.
+   *
+   * @param actuator The Actuator object for which the checkbox is created
+   * @return The JavaFX CheckBox representing the actuator's state
+   */
   private CheckBox createActuatorCheckbox(Actuator actuator) {
     CheckBox checkbox = new CheckBox();
     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
@@ -90,6 +106,12 @@ public class ActuatorPane extends TitledPane {
     return checkbox;
   }
 
+  /**
+   * Create a Label GUI component for an Actuator with text bound to the actuator's properties.
+   *
+   * @param actuator The Actuator object for which the Label GUI component is being created
+   * @return A JavaFX Label representing the graphical user interface for the Actuator
+   */
   private Label createActuatorLabel(Actuator actuator) {
     SimpleStringProperty props = new SimpleStringProperty(generateActuatorText(actuator));
     actuatorValue.put(actuator, props);

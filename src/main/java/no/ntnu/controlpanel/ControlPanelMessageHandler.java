@@ -5,6 +5,7 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.message.Splitters;
 import no.ntnu.server.MessageHandler;
 import no.ntnu.tools.Logger;
@@ -25,6 +26,7 @@ public class ControlPanelMessageHandler implements MessageHandler {
     private CommunicationChannel communicationChannel;
     private ActuatorCollection actuatorCollection;
     private SensorActuatorNode sensorActuatorNode;
+    private ControlPanelApplication controlPanelApplication;
 
     /**
      * Constructor for a ControlPanelMessageHandler.
@@ -64,21 +66,22 @@ public class ControlPanelMessageHandler implements MessageHandler {
         }
     }
 
+    /**
+     * Handles the update of actuators by type based on the provided message data.
+     * Parses the message body to extract actuator type and status, then finds all actuators
+     * of the specified type and sends a command to change their status accordingly.
+     *
+     * @param bodyData a string containing the data section from the message body in the format "actuatorType!isOn"
+     */
     private void handleUpdateActuatorByTypeMessage(String bodyData) {
-        String[] bodyValues = bodyData.split(Splitters.TYPE_SPLITTER);
-        try{
-            int actuatorType = Integer.parseInt(bodyValues[0]);
+        String[] bodyValues = bodyData.split(Splitters.BODY_SPLITTER);
+        Logger.info("The server came here");
+        try {
+            String type = bodyValues[0];
             boolean isOn = Boolean.parseBoolean(bodyValues[1]);
-            List<Actuator> actuatorsByType = sensorActuatorNode.findActuatorByType(String.valueOf(actuatorType));
-            for (Actuator actuator : actuatorsByType) {
-                communicationChannel.sendActuatorChange(actuator.getNodeId(), actuator.getId(), isOn);
-                int nodeID = actuator.getNodeId();
-                int actuatorID = actuator.getId();
-                this.logic.onActuatorStateChanged(nodeID, actuatorID, isOn);
-            }
-        }
-        catch(Exception e){
-            Logger.error("Error updating actuator by type message: " + e.getMessage());
+            this.logic.onActuatorTypeToggle(type,isOn);
+        } catch (Exception e) {
+            Logger.info("Actuator update failed: " + e.getMessage());
         }
     }
 

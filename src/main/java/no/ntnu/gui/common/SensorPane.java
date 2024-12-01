@@ -85,10 +85,22 @@ public class SensorPane extends TitledPane {
     return label;
   }
 
+  /**
+   * Generates a formatted text representation of a SensorReading.
+   *
+   * @param sensor The sensor reading for which the text representation is generated
+   * @return The formatted text representing the sensor reading type and value
+   */
   private String generateSensorText(SensorReading sensor) {
     return sensor.getType() + ": " + sensor.getFormatted();
   }
 
+  /**
+   * Updates the label of a sensor in the GUI.
+   *
+   * @param sensor The sensor reading to update the label for
+   * @param index The index of the sensor label to update
+   */
   private void updateSensorLabel(SensorReading sensor, int index) {
     if (sensorProps.size() > index) {
       SimpleStringProperty props = sensorProps.get(index);

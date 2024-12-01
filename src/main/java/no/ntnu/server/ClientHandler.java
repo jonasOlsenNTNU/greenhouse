@@ -110,6 +110,7 @@ public class ClientHandler extends Thread {
      */
     public void sendMessageToClient(String message) {
         socketWriter.println(message);
+        Logger.info("Client message sent " + message);
     }
 
     public int getClientNumber() {

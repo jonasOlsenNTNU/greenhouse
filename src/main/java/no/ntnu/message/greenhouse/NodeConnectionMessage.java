@@ -25,6 +25,11 @@ public class NodeConnectionMessage implements Message {
                 + Splitters.BODY_SPLITTER + nodeID;
     }
 
+    /**
+     * Get the full message string of the NodeConnectionMessage.
+     *
+     * @return the concatenated head and body elements of the message separated by MESSAGE_SPLITTER
+     */
     @Override
     public String getMessageString() {
         return this.head + Splitters.MESSAGE_SPLITTER + this.body;

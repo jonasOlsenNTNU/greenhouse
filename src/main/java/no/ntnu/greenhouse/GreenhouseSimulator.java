@@ -65,6 +65,12 @@ public class GreenhouseSimulator {
     }
   }
 
+  /**
+   * This method is responsible for initiating real communication with the nodes in the greenhouse.
+   * It sets up TCP or UDP communication with each sensor-actuator node inside the greenhouse.
+   * This method iterates over the nodes collection and starts communication with each node by calling
+   * the startCommunication() method on each SensorActuatorNode object.
+   */
   private void initiateRealCommunication() {
     // TODO - here you can set up the TCP or UDP communication
     for (SensorActuatorNode node : nodes.values()) {
@@ -110,6 +116,12 @@ public class GreenhouseSimulator {
       node.addStateListener(listener);
     }
   }
+
+  /**
+   * Retrieves a mapping of node IDs to SensorActuatorNode objects.
+   *
+   * @return A map containing node IDs as keys and corresponding SensorActuatorNode objects as values.
+   */
   public Map<Integer, SensorActuatorNode> getNodes() {
     return nodes;
   }

@@ -46,23 +46,44 @@ public class NodeCommunicationChannel extends Client implements ActuatorListener
                 node.getId(), node.getActuators(), clientHandlerID).getMessageString());
     }
 
+    /**
+     * Notify the server that an actuator has been updated with new information.
+     *
+     * @param nodeId The ID of the node to which the actuator belongs.
+     * @param actuator The updated Actuator object with new information.
+     */
     @Override
     public void actuatorUpdated(int nodeId, Actuator actuator) {
         this.sendMessageToServer(new ActuatorUpdateMessage(
                 this.node.getId(), actuator.getId(), actuator.isOn()).getMessageString());
     }
 
+    /**
+     * Notifies the server that a SensorActuatorNode is ready.
+     *
+     * @param node The SensorActuatorNode that is ready.
+     */
     @Override
     public void onNodeReady(SensorActuatorNode node) {
         this.sendMessageToServer(new AddNodeMessage(
                 node.getId(), node.getActuators()).getMessageString());
     }
 
+    /**
+     * Notifies when a SensorActuatorNode has stopped.
+     *
+     * @param node The SensorActuatorNode that has stopped.
+     */
     @Override
     public void onNodeStopped(SensorActuatorNode node) {
         Logger.info("Node on thread: " + Thread.currentThread().getName() + " has stopped.");
     }
 
+    /**
+     * Notifies the communication channel that the sensors have been updated and sends a message to the server with the updated sensor information.
+     *
+     * @param sensors A list of Sensor objects containing the updated sensor readings.
+     */
     @Override
     public void sensorsUpdated(List<Sensor> sensors) {
         this.sendMessageToServer(new SensorUpdateMessage(

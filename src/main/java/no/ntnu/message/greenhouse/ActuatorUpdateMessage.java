@@ -25,6 +25,11 @@ public class ActuatorUpdateMessage implements Message {
         //int nodeId, int actuatorId, boolean isOn
     }
 
+    /**
+     * Get the message string composed of the head and body parts separated by a splitter.
+     *
+     * @return The concatenated message head and body.
+     */
     @Override
     public String getMessageString() {
         return this.head + Splitters.MESSAGE_SPLITTER + this.body;

@@ -43,24 +43,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     this.addActuatorListener(communicationChannel);
     this.addStateListener(communicationChannel);
   }
-  /** //TODO
-   * Find and return a list of actuators based on the given type.
-   *
-   * @param type The type of actuators to search for.
-   * @return A list of Actuator objects with the specified type.
-   */
-  public List<Actuator> findActuatorByType(String type){
-    Logger.info("The type that is being searched for is " + type);
-    List<Actuator> matchingActuators = new ArrayList<>();
-    for (Actuator actuator : actuators) {
-      Logger.info("Actuators being searched for are " + actuator.getType());
-      if (actuator.getType().equalsIgnoreCase((type))) {
-        Logger.info("The list of matching actuators is: " + matchingActuators);
-        matchingActuators.add(actuator);
-      }
-    }
-    return matchingActuators;
-  }
   /**
    * Get the unique ID of the node.
    *
@@ -350,7 +332,22 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
   }
 
+  /**
+   * Send information about this node when requested.
+   *
+   * @param clientHandlerID The ID of the client that requested the information.
+   */
   public void onNodeInfoRequest(String clientHandlerID) {
     this.communicationChannel.sendNodeInfo(clientHandlerID);
+  }
+
+  public void setActuatorType(String actuatorType, boolean isOn) {
+    Logger.info("The actuator type to change is " + actuatorType + " the state to change " + isOn);
+    for (Actuator actuator : actuators) {
+          if (actuator.getActuatorType().equals(actuatorType)) {
+              actuator.set(isOn);
+            Logger.info("The actuators state is now");
+          }
+      }
   }
 }

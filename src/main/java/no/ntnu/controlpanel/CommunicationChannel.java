@@ -15,6 +15,7 @@ public interface CommunicationChannel {
    */
   void sendActuatorChange(int nodeId, int actuatorId, boolean isOn);
 
+
   /**
    * Open the communication channel.
    *
@@ -37,4 +38,6 @@ public interface CommunicationChannel {
    * Request node information from nodes already connected to the server.
    */
   void sendNodeRequestMessage();
+
+  void sendBroadcastActuatorChange(String type,boolean isOn);
 }

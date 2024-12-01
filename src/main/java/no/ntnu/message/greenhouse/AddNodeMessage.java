@@ -36,6 +36,12 @@ public class AddNodeMessage implements Message {
         this.createBody(nodeID, actuators);
     }
 
+    /**
+     * Creates the body of the AddNodeMessage by converting the ActuatorCollection to a formatted string.
+     *
+     * @param nodeID The ID of the node sending the message.
+     * @param actuators The collection of actuators on the node.
+     */
     private void createBody(int nodeID, ActuatorCollection actuators) {
         StringBuilder actuatorsString = new StringBuilder();
         for (Actuator actuator : actuators) {
@@ -52,6 +58,11 @@ public class AddNodeMessage implements Message {
         System.out.println("Splitter used is: " + Splitters.BODY_SPLITTER +" Actuator given: " + actuatorsString);
     }
 
+    /**
+     * Returns a formatted message string composed of the head and body of the message.
+     *
+     * @return the formatted message string
+     */
     @Override
     public String getMessageString() {
         return this.head + "#" + this.body;

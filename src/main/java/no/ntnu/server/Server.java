@@ -76,30 +76,6 @@ public class Server {
         return clientSocket;
     }
 
-    public void sendMessageToActuatorType(String actuatorType, Boolean message){
-
-        if(sensorActuatorNode == null) {
-            Logger.error("sensorActuatorNode is null");
-            return;
-        }
-        Logger.info("Sending message to " + actuatorType + " and the message is: " + message);
-        List<Actuator> actuatorsByType = sensorActuatorNode.findActuatorByType(actuatorType);
-        Logger.info("The actuators found are "+ actuatorsByType);
-        for (Actuator actuator1 : actuatorsByType) {
-            communicationChannel.sendActuatorChange(actuator.getNodeId(), actuator.getId(), message);
-        }
-    }
-
-    /**
-     * Send a message to all connected nodes.
-     *
-     * @param message The message to be sent to all nodes.
-     */
-    public void sendMessageToAllNodes(String message) {
-        for (ClientHandler c : nodes.values()) {
-            c.sendMessageToClient(message);
-        }
-    }
     /**
      * Create a ServerSocket for the server.
      * If successful isRunning is set to true.
@@ -153,7 +129,6 @@ public class Server {
     public void removeControlPanel(ClientHandler cPanelClientHandler) {
         this.controlpanels.remove(cPanelClientHandler.getClientNumber());
     }
-
     /**
      * Send a message to a single node.
      * @param id ID of the receiver node.
@@ -174,6 +149,16 @@ public class Server {
      */
     public void sendMessageToAllControlPanels(String message) {
         for (ClientHandler c : controlpanels.values()) {
+            c.sendMessageToClient(message);
+        }
+    }
+    /**
+     * Send a message to all connected nodes.
+     *
+     * @param message The message to be sent to all nodes.
+     */
+    public void sendMessageToAllNodes(String message) {
+        for (ClientHandler c : nodes.values()) {
             c.sendMessageToClient(message);
         }
     }

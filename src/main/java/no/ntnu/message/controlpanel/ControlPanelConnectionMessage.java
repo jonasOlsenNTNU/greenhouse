@@ -19,6 +19,12 @@ public class ControlPanelConnectionMessage implements Message {
                 + Splitters.TYPE_SPLITTER + connecting;
     }
 
+    /**
+     * Get the message as a serialized string.
+     * Used to send the message to a socket output stream.
+     *
+     * @return The serialized message to be sent.
+     */
     @Override
     public String getMessageString() {
         return this.head + Splitters.MESSAGE_SPLITTER + this.body;

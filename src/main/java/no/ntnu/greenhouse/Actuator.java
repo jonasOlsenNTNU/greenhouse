@@ -179,6 +179,11 @@ public class Actuator {
     return nodeId;
   }
 
+  /**
+   * Retrieves the type of the actuator.
+   *
+   * @return The type of the actuator.
+   */
   public String getActuatorType(){
     return type;
   }

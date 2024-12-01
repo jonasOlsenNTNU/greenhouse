@@ -27,6 +27,11 @@ public class RequestNodesMessage implements Message {
         this.body = "RequestNodesMessage" + Splitters.TYPE_SPLITTER + clientHandlerID;
     }
 
+    /**
+     * Retrieves the formatted message string combining the head and body of the message.
+     *
+     * @return The message string with the head followed by the message splitter and then the body.
+     */
     @Override
     public String getMessageString() {
         return this.head + Splitters.MESSAGE_SPLITTER + this.body;

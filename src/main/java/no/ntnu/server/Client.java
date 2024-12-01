@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * Represents an abstract Client class for handling communication with a server.
+ */
 public abstract class Client {
     private MessageHandler messageHandler;
     protected BufferedReader socketReader;
@@ -19,6 +22,14 @@ public abstract class Client {
         this.messageHandler = null;
         this.connected = false;
     }
+
+    /**
+     * Try to open a connection to the server.
+     * If not already connected, it tries to connect to the server,
+     * initializes the input and output streams, and starts a receiver thread to handle incoming messages.
+     *
+     * @return true if the connection is successfully opened, false otherwise.
+     */
     public boolean open() {
         if(!connected) {
             if (!connectToServer()) {

@@ -1,21 +1,27 @@
 package no.ntnu.gui.controlpanel;
 
-import java.util.HashMap;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
@@ -37,9 +43,11 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   private Scene mainScene;
   private final Map<Integer, SensorPane> sensorPanes = new HashMap<>();
   private final Map<Integer, ActuatorPane> actuatorPanes = new HashMap<>();
-  private final Map<Integer, SensorActuatorNodeInfo> nodeInfos = new HashMap<>();
+  private final Map<Integer, SensorActuatorNodeInfo> nodeInfo = new HashMap<>();
   private final Map<Integer, Tab> nodeTabs = new HashMap<>();
+  private VBox globalTabVBox;
 
+  private Set<String> actuatorTypes = new HashSet<>();
   /**
    * Application entrypoint for the GUI of a control panel.
    * Note - this is a workaround to avoid problems with JavaFX not finding the modules!
@@ -86,12 +94,25 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     return l;
   }
 
+  /**
+   * Method called when a new node is added to the control panel UI. It adds a new tab for the
+   * node and sets listeners for the actuators of the node.
+   *
+   * @param nodeInfo A SensorActuatorNodeInfo object containing information about the new node
+   */
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
-    Platform.runLater(() -> addNodeTab(nodeInfo));
-    for (Actuator actuator : nodeInfo.getActuators()) {
-      actuator.setListener(logic);
-    }
+    Platform.runLater(() -> {
+      addNodeTab(nodeInfo);
+      for (Actuator actuator : nodeInfo.getActuators()) {
+        actuator.setListener(logic);
+        String type = actuator.getType();
+        if (actuatorTypes.add(type)) { // Adds type if not present, returns true if it's new.
+          Logger.info("Adding new actuator type to Global tab: " + type);
+          addGlobalActuatorControls(type);
+        }
+      }
+    });
   }
 
   @Override
@@ -101,7 +122,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
       Platform.runLater(() -> {
         removeNodeTab(nodeId, nodeTab);
         forgetNodeInfo(nodeId);
-        if (nodeInfos.isEmpty()) {
+        if (nodeInfo.isEmpty()) {
           removeNodeTabPane();
         }
       });
@@ -149,9 +170,15 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
+  @Override
+  public void onActuatorTypeToggle(String type, boolean isOn) {
+    channel.sendBroadcastActuatorChange(type,isOn);
+  }
+
+
   private Actuator getStoredActuator(int nodeId, int actuatorId) {
     Actuator actuator = null;
-    SensorActuatorNodeInfo nodeInfo = nodeInfos.get(nodeId);
+    SensorActuatorNodeInfo nodeInfo = this.nodeInfo.get(nodeId);
     if (nodeInfo != null) {
       actuator = nodeInfo.getActuator(actuatorId);
     }
@@ -161,7 +188,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   private void forgetNodeInfo(int nodeId) {
     sensorPanes.remove(nodeId);
     actuatorPanes.remove(nodeId);
-    nodeInfos.remove(nodeId);
+    nodeInfo.remove(nodeId);
   }
 
   private void removeNodeTab(int nodeId, Tab nodeTab) {
@@ -173,10 +200,11 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     if (nodeTabPane == null) {
       nodeTabPane = new TabPane();
       mainScene.setRoot(nodeTabPane);
+      nodeTabPane.getTabs().add(createGlobalTab());
     }
     Tab nodeTab = nodeTabs.get(nodeInfo.getId());
     if (nodeTab == null) {
-      nodeInfos.put(nodeInfo.getId(), nodeInfo);
+      this.nodeInfo.put(nodeInfo.getId(), nodeInfo);
       nodeTabPane.getTabs().add(createNodeTab(nodeInfo));
     } else {
       Logger.info("Duplicate node spawned, ignore it");
@@ -193,9 +221,43 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     nodeTabs.put(nodeInfo.getId(), tab);
     return tab;
   }
-
   private static SensorPane createEmptySensorPane() {
     return new SensorPane();
+  }
+  private Tab createGlobalTab() {
+    Tab tab = new Tab("Global");
+    globalTabVBox = new VBox();
+    globalTabVBox.setSpacing(20); // Sets spacing between each HBox containing buttons.
+    globalTabVBox.setPadding(new Insets(20, 20, 20, 20)); // Adds padding around the VBox (top, right, bottom, left).
+
+    // Initial actuator buttons.
+    for (String type : actuatorTypes) {
+      addGlobalActuatorControls(type);
+    }
+
+    tab.setContent(globalTabVBox);
+    return tab;
+  }
+  private void addGlobalActuatorControls(String type) {
+    HBox buttonBox = new HBox();
+    buttonBox.setSpacing(10); // Sets spacing between elements in the HBox.
+
+    Label typeLabel = new Label(type + "s : ");
+
+    Button turnOnButton = new Button("On");
+    turnOnButton.setOnAction(event -> {
+      Logger.info("Broadcasting Turn On for " + type);
+      logic.onActuatorTypeToggle(type, true);
+    });
+
+    Button turnOffButton = new Button("Off");
+    turnOffButton.setOnAction(event -> {
+      Logger.info("Broadcasting Turn Off for " + type);
+      logic.onActuatorTypeToggle(type, false);
+    });
+
+    buttonBox.getChildren().addAll(typeLabel, turnOnButton, turnOffButton);
+    globalTabVBox.getChildren().add(buttonBox);
   }
 
   @Override

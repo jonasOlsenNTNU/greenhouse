@@ -3,6 +3,7 @@ package no.ntnu.controlpanel;
 import no.ntnu.message.controlpanel.ActuatorChangeMessage;
 import no.ntnu.message.controlpanel.ControlPanelConnectionMessage;
 import no.ntnu.message.controlpanel.RequestNodesMessage;
+import no.ntnu.message.controlpanel.UpdateActuatorByTypeMessage;
 import no.ntnu.server.Client;
 import no.ntnu.tools.Logger;
 
@@ -31,11 +32,21 @@ public class ControlPanelCommunicationChannel extends Client implements Communic
         this.connected = false;
     }
 
+    /**
+     * Sends a control panel connection message to the server.
+     * If connecting is true, it indicates that the control panel is connecting; if false, it indicates disconnection.
+     *
+     * @param connecting True if connecting, false if disconnecting
+     */
     @Override
     public void sendControlPanelConnectionMessage(boolean connecting) {
         this.sendMessageToServer(new ControlPanelConnectionMessage(connecting).getMessageString());
     }
 
+    /**
+     * Closes the connection with the server by setting the 'connected' flag to false,
+     * closing the socket, and notifying the logic object that the communication channel is closed.
+     */
     @Override
     public void closeConnection() {
         this.connected = false;
@@ -47,6 +58,13 @@ public class ControlPanelCommunicationChannel extends Client implements Communic
         this.logic.onCommunicationChannelClosed();
     }
 
+    /**
+     * Sends a message to the server to change the state of an actuator.
+     *
+     * @param nodeId The ID of the node to which the actuator belongs. Must be 0 or higher.
+     * @param actuatorId The ID of the actuator to change. Must be 0 or higher.
+     * @param isOn True if the actuator should be turned on, false if it should be turned off.
+     */
     @Override
     public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
         if (nodeId >= 0) {
@@ -60,8 +78,20 @@ public class ControlPanelCommunicationChannel extends Client implements Communic
         }
     }
 
+    /**
+     * Sends a node request message to the server.
+     * <p>
+     * This method creates a new RequestNodesMessage and sends it to the server using the sendMessageToServer method.
+     * The RequestNodesMessage contains information about the sender, which can be the control panel or a server.
+     * </p>
+     */
     @Override
     public void sendNodeRequestMessage() {
         this.sendMessageToServer(new RequestNodesMessage().getMessageString());
+    }
+
+    @Override
+    public void sendBroadcastActuatorChange(String actuatorType, boolean isOn) {
+        this.sendMessageToServer(new UpdateActuatorByTypeMessage(actuatorType,isOn).getMessageString());
     }
 }

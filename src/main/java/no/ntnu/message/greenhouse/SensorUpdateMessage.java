@@ -35,6 +35,11 @@ public class SensorUpdateMessage implements Message {
                 + Splitters.BODY_SPLITTER + readings.toString();
     }
 
+    /**
+     * Gets the concatenated message string by combining the head and body with a message splitter.
+     *
+     * @return The concatenated message string.
+     */
     @Override
     public String getMessageString() {
         return this.head + Splitters.MESSAGE_SPLITTER + this.body;

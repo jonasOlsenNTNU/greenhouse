@@ -192,21 +192,40 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     return true;
   }
 
+  /**
+   * This method is used to close the connection of the fake communication channel. Since the fake channel
+   * does not actually connect to a server, this method does nothing besides logging an informative message.
+   */
   @Override
   public void closeConnection() {
     Logger.info("CloseConnection() does nothing for the fake channel because it is not connected" +
             "to a server.");
   }
 
+  /**
+   * Notify the server when the control panel is connecting or disconnecting.
+   *
+   * @param connecting True if the control panel is connecting, false if it is disconnecting
+   */
   @Override
   public void sendControlPanelConnectionMessage(boolean connecting) {
     Logger.info("sendControlPanelConnectionMessage() does nothing for the fake channel because it is not" +
             "connected to a server.");
   }
 
+  /**
+   * This method sends a node request message over the fake communication channel. Since the fake
+   * channel is not connected to a server, this method does not perform any actual action
+   * besides logging an informative message using the Logger class.
+   */
   @Override
   public void sendNodeRequestMessage() {
     Logger.info("sendNodeRequestMessage() does nothing for the fake channel because it is not" +
             "connected to a server.");
+  }
+  //TODO
+  @Override
+  public void sendBroadcastActuatorChange(String type, boolean isOn) {
+    Logger.info("sendBroadcastActuatorChange(" + type + ", " + isOn + ")");
   }
 }
