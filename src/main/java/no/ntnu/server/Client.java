@@ -43,7 +43,6 @@ public abstract class Client {
         }
         return true;
     }
-
     /**
      * Try to connect to the server.
      * @return True if successful, false if not.
@@ -84,8 +83,6 @@ public abstract class Client {
         while(this.connected) {
             String serverMessage = readServerMessage();
             if (serverMessage != null) {
-                //TODO: Remove Logger after testing
-                //Logger.info("Received message from server: " + serverMessage);
                 this.messageHandler.handleMessage(serverMessage.split(Splitters.MESSAGE_SPLITTER)[1]);
             }
         }
@@ -126,8 +123,6 @@ public abstract class Client {
      */
     public void sendMessageToServer(String message) {
         message = message.replace("\\", "");
-        //TODO: Remove logger after testing
-        Logger.info("Message sent: " + message);
         this.socketWriter.println(message);
     }
 

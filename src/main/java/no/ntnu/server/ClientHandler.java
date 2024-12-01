@@ -1,6 +1,7 @@
 package no.ntnu.server;
 
-import no.ntnu.greenhouse.SensorActuatorNode;
+
+
 import no.ntnu.tools.Logger;
 
 import java.io.BufferedReader;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.List;
+
 
 /**
  * A handler for a single client socket.
@@ -77,8 +78,6 @@ public class ClientHandler extends Thread {
         while (this.clientConnected) {
             String clientMessage = readClientMessage();
             if (clientMessage != null) {
-                //TODO: Remove logger after testing
-                Logger.info("Client message received: " + clientMessage);
                 if(server.messageHandler.isServerMessage(clientMessage)){
                     server.messageHandler.handleServerMessage(clientMessage, this);
                 } else {
@@ -86,8 +85,35 @@ public class ClientHandler extends Thread {
                 }
             }
         }
-        //TODO: Remove client from server (disconnected)
+        removeClient();
     }
+
+    /**
+     * Method to remove the client with a specific client ID.
+     * Removes the node associated with the client ID from the server's nodes map
+     * and the control panel associated with this client handler from the server's control panels map.
+     * Logs messages indicating whether the node and control panel were found and removed successfully.
+     */
+    private void removeClient() {
+        String clientId = Integer.toString(this.clientNumber);
+
+
+        if (server.getNodes().containsKey(clientId)) {
+            server.removeNode(clientId);
+            Logger.info("Node with client ID " + clientId + " removed.");
+        } else {
+            Logger.info("Node with client ID " + clientId + " not found.");
+        }
+
+        if (server.getControlPanels().containsValue(ClientHandler.this)) {
+            server.removeControlPanel(ClientHandler.this);
+            Logger.info("Control panel for client handler removed.");
+        } else {
+            Logger.info("Control panel for client handler not found.");
+        }
+    }
+
+
     /**
      * Attempts to read a serialized message from the sockets input stream.
      * Updates isConnected if the socket is disconnected and throws an exception.

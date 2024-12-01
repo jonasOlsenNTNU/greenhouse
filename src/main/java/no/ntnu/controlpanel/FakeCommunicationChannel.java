@@ -223,7 +223,14 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     Logger.info("sendNodeRequestMessage() does nothing for the fake channel because it is not" +
             "connected to a server.");
   }
-  //TODO
+
+  /**
+   * Send a broadcast message to update the actuator state.
+   * The message contains the type of actuator and whether it is turned on or off.
+   *
+   * @param type The type of the actuator
+   * @param isOn True if the actuator is turned on, false if it is turned off
+   */
   @Override
   public void sendBroadcastActuatorChange(String type, boolean isOn) {
     Logger.info("sendBroadcastActuatorChange(" + type + ", " + isOn + ")");

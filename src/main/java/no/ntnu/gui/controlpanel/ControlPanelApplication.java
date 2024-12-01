@@ -1,6 +1,6 @@
 package no.ntnu.gui.controlpanel;
 
-import java.awt.*;
+
 import java.util.*;
 import java.util.List;
 
@@ -21,7 +21,6 @@ import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;

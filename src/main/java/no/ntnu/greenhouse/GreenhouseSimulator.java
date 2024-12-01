@@ -72,7 +72,6 @@ public class GreenhouseSimulator {
    * the startCommunication() method on each SensorActuatorNode object.
    */
   private void initiateRealCommunication() {
-    // TODO - here you can set up the TCP or UDP communication
     for (SensorActuatorNode node : nodes.values()) {
       node.startCommunication();
     }
@@ -99,7 +98,6 @@ public class GreenhouseSimulator {
         periodicSwitch.stop();
       }
     } else {
-      // TODO - here you stop the TCP/UDP communication
       for (SensorActuatorNode node : nodes.values()) {
         node.stopCommunication();
       }

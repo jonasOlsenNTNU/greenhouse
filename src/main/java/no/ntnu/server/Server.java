@@ -1,16 +1,13 @@
 package no.ntnu.server;
 
-import no.ntnu.controlpanel.CommunicationChannel;
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.ActuatorCollection;
-import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.tools.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+
 
 /**
  * A server that handles communication between greenhouse nodes and control panels.
@@ -23,10 +20,6 @@ public class Server {
     private boolean isRunning;
     private static final int portNumber = 8585;
     protected final ServerMessageHandler messageHandler = new ServerMessageHandler(this);
-    private Actuator actuator;
-    private CommunicationChannel communicationChannel;
-    private ActuatorCollection actuatorCollection;
-    private SensorActuatorNode sensorActuatorNode;
 
     /**
      * Normal constructor for a server object.
@@ -38,8 +31,11 @@ public class Server {
         this.isRunning = false;
     }
 
-    public HashMap<String, ClientHandler> getNodes(){
+    public Map<String, ClientHandler> getNodes(){
         return  this.nodes;
+    }
+    public Map<Integer, ClientHandler> getControlPanels(){
+        return this.controlpanels;
     }
     /**
      * Starts the server by opening a listening socket.

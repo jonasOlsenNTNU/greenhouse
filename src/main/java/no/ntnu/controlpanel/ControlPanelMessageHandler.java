@@ -2,10 +2,7 @@ package no.ntnu.controlpanel;
 
 
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.ActuatorCollection;
-import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.SensorReading;
-import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.message.Splitters;
 import no.ntnu.server.MessageHandler;
 import no.ntnu.tools.Logger;
@@ -13,7 +10,6 @@ import no.ntnu.tools.Parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Class responsible for parsing and handling incoming serialized messages.
@@ -22,11 +18,7 @@ import java.util.List;
  */
 public class ControlPanelMessageHandler implements MessageHandler {
     private final ControlPanelLogic logic;
-    private Actuator actuator;
-    private CommunicationChannel communicationChannel;
-    private ActuatorCollection actuatorCollection;
-    private SensorActuatorNode sensorActuatorNode;
-    private ControlPanelApplication controlPanelApplication;
+
 
     /**
      * Constructor for a ControlPanelMessageHandler.

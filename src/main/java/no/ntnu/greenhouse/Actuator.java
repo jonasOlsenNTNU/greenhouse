@@ -1,11 +1,11 @@
 package no.ntnu.greenhouse;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 import no.ntnu.listeners.common.ActuatorListener;
-import no.ntnu.server.ClientHandler;
+
 import no.ntnu.server.Server;
 import no.ntnu.tools.Logger;
 
@@ -179,14 +179,6 @@ public class Actuator {
     return nodeId;
   }
 
-  /**
-   * Retrieves the type of the actuator.
-   *
-   * @return The type of the actuator.
-   */
-  public String getActuatorType(){
-    return type;
-  }
 
   /**
    * Set the actuator to the desired state.

@@ -4,6 +4,7 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.message.Message;
 import no.ntnu.message.Splitters;
+import no.ntnu.tools.Logger;
 
 /**
  * A message for triggering the GreenhouseEventListener.onNodeAdded event
@@ -55,7 +56,7 @@ public class AddNodeMessage implements Message {
         this.body = "AddNodeMessage"
                 + Splitters.TYPE_SPLITTER + nodeID
                 + Splitters.BODY_SPLITTER + actuatorsString;
-        System.out.println("Splitter used is: " + Splitters.BODY_SPLITTER +" Actuator given: " + actuatorsString);
+        Logger.info("Splitter used is: " + Splitters.BODY_SPLITTER +" Actuator given: " + actuatorsString);
     }
 
     /**

@@ -42,22 +42,6 @@ public class ActuatorPane extends TitledPane {
     GuiTools.stretchVertically(this);
   }
 
-//  private void AddTypeControlSection(Pane parent) {
-//    Map<String, CheckBox> typeCheckBoxes = new HashMap<>();
-//    for(Actuator actuator: actuatorActive.keySet()){
-//      String type = actuator.getType();
-//      if(!typeCheckBoxes.containsKey(type)){
-//        CheckBox checkBox = new CheckBox(type+ ": " + actuator.isOn());
-//        typeCheckBoxes.put(type, checkBox);
-//
-//        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-//          boolean state = newValue;
-//        });
-//        parent.getChildren().add(checkBox);
-//      }
-//    }
-//  }
-
   /**
    * Adds GUI controls for actuators to a parent pane.
    *
@@ -94,8 +78,6 @@ public class ActuatorPane extends TitledPane {
     actuatorActive.put(actuator, isSelected);
     checkbox.selectedProperty().bindBidirectional(isSelected);
     checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      //TODO: Remove Logger after testing
-      Logger.info("Checkbox clicked");
       if (newValue != null && newValue) {
         actuator.turnOn();
       } else {

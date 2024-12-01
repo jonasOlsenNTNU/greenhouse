@@ -6,7 +6,6 @@ import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
-import no.ntnu.message.greenhouse.AddNodeMessage;
 import no.ntnu.tools.Logger;
 
 /**
@@ -344,7 +343,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public void setActuatorType(String actuatorType, boolean isOn) {
     Logger.info("The actuator type to change is " + actuatorType + " the state to change " + isOn);
     for (Actuator actuator : actuators) {
-          if (actuator.getActuatorType().equals(actuatorType)) {
+          if (actuator.getType().equals(actuatorType)) {
               actuator.set(isOn);
             Logger.info("The actuators state is now");
           }

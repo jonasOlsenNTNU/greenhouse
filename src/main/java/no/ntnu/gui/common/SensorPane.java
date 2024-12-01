@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.chart.LineChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;

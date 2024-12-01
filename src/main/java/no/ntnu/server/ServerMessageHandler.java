@@ -2,7 +2,6 @@ package no.ntnu.server;
 
 import no.ntnu.message.Splitters;
 import no.ntnu.message.controlpanel.RequestNodesMessage;
-import no.ntnu.message.controlpanel.UpdateActuatorByTypeMessage;
 import no.ntnu.message.server.RemoveNodeMessage;
 import no.ntnu.tools.Logger;
 
@@ -49,8 +48,6 @@ public class ServerMessageHandler implements MessageHandler {
      */
     public boolean isServerMessage(String message) {
         String type = message.split(Splitters.MESSAGE_SPLITTER)[0].split(Splitters.HEAD_SPLITTER)[0];
-        // TODO: Remove logger after testing
-        Logger.info("Message type: " + type);
         return type.equals("server");
     }
 
@@ -87,9 +84,7 @@ public class ServerMessageHandler implements MessageHandler {
                     Logger.error("Boolean 'connecting' not valid");
                 }
             }
-            case "UpdateActuatorByTypeMessage" -> {
-                    server.sendMessageToAllNodes(message);
-            }
+            case "UpdateActuatorByTypeMessage" -> server.sendMessageToAllNodes(message);
             case "RequestNodesMessage" -> server.sendMessageToAllNodes(new RequestNodesMessage(
                     clientHandler.getClientNumber()).getMessageString());
             default -> Logger.error("Message type not found: " + type);

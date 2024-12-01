@@ -24,7 +24,6 @@ public class NodeMessageHandler implements MessageHandler {
         String[] bodySplit = messageBody.split(Splitters.TYPE_SPLITTER);
         String type = bodySplit[0];
         //Add more message types here to handle them.
-        //TODO: Remove after testing
         Logger.error("Message received: " + messageBody + " type: " + type);
         switch (type) {
             case "ActuatorChangeMessage" -> this.handleActuatorChangeMessage(bodySplit[1]);
