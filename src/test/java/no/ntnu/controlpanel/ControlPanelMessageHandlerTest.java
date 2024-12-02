@@ -1,6 +1,5 @@
 package no.ntnu.controlpanel;
 
-import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,6 @@ class ControlPanelMessageHandlerTest {
     ControlPanelMessageHandler handler = new ControlPanelMessageHandler(logic);
 
     String validMessage = "RemoveNodeMessage!1";
-    String bodyData = "1";
 
     messageHandler.handleMessage(validMessage);
     verify(logicMock).onNodeRemoved(1);

@@ -1,12 +1,10 @@
 package no.ntnu.greenhouse;
 
-
 import java.util.HashMap;
 
 import java.util.Map;
 import no.ntnu.listeners.common.ActuatorListener;
 
-import no.ntnu.server.Server;
 import no.ntnu.tools.Logger;
 
 /**
@@ -22,7 +20,6 @@ public class Actuator {
   private ActuatorListener listener;
 
   private boolean on;
-  private Server server;
 
   /**
    * Create an actuator. An ID will be auto-generated.

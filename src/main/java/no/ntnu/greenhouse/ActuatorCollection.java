@@ -2,7 +2,6 @@ package no.ntnu.greenhouse;
 
 import java.util.*;
 
-import no.ntnu.server.Server;
 import no.ntnu.tools.Logger;
 
 /**
@@ -10,7 +9,6 @@ import no.ntnu.tools.Logger;
  */
 public class ActuatorCollection implements Iterable<Actuator> {
   private final Map<Integer, Actuator> actuators = new HashMap<>();
-  private Server server;
 
   /**
    * Print a short info about all the actuators. Usable for debugging. Does NOT print a newline!

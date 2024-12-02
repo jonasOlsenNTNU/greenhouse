@@ -1,9 +1,7 @@
 package no.ntnu.controlpanel;
 
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.SensorReading;
-import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ class ControlPanelLogicTest {
     private ControlPanelLogic logic;
     private GreenhouseEventListener listenerMock;
     private CommunicationChannel communicationChannelMock;
-    private CommunicationChannelListener communicationChannelListenerMock;
     private SensorActuatorNodeInfo nodeInfo;
 
     @BeforeEach
@@ -27,7 +24,6 @@ class ControlPanelLogicTest {
         logic =  new ControlPanelLogic();
         listenerMock = mock(GreenhouseEventListener.class);
         communicationChannelMock = mock(CommunicationChannel.class);
-        communicationChannelListenerMock = mock(CommunicationChannelListener.class);
     }
 
     @Test

@@ -1,18 +1,12 @@
 package no.ntnu.greenhouse;
 
 import no.ntnu.message.Splitters;
-import no.ntnu.message.greenhouse.ActuatorUpdateMessage;
-import no.ntnu.message.greenhouse.AddNodeMessage;
-import no.ntnu.message.greenhouse.NodeConnectionMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class NodeCommunicationChannelTest {
